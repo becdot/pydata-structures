@@ -150,7 +150,28 @@ class DoublyLinkedList(object):
             n = (n - 1) if reverse else (n + 1)
 
 
+    def insert(self, value, index):
+        # to insert at the beginning, or when the list is empty
+        if not(len(self) and index):
+            self._insert(Node(value))
+        # to insert at the end of a list
+        elif index >= len(self):
+            self._rev_insert(Node(value))
+        elif len(self)/2.0 > index:
+            # iterate forwards
+            for i, n in self.enumerate():
+                if i == index:
+                    self._insert(Node(value), n)
+        else:
+            # iterate backwards
+            for i, n in self.enumerate(reverse=True):
+                if i == index:
+                    self._rev_insert(Node(value), n)
+
+
+
     def _insert(self, node, prev_node=None):
+        # if prev_node not provided, inserts at the beginning
         # going only forwards!
         self.tail = node if self.tail == prev_node else self.tail
         if prev_node:
@@ -165,8 +186,8 @@ class DoublyLinkedList(object):
             node.next = self.head
             self.head = node
 
-
     def _rev_insert(self, node, prev_node=None):
+        # if prev_node is not provided, inserts at the end
         # going backwards!
         self.head = node if self.head == prev_node else self.head
         if prev_node:
@@ -180,68 +201,6 @@ class DoublyLinkedList(object):
                 self.tail.next = node
             node.prev = self.tail
             self.tail = node
-
-            
-
-
-
-
-    # def insert(self, value, index):
-    #     if index == 0 or len(self) == 0:
-    #         self._insert(Node(value), after=False)
-    #         return
-    #     if len(self)/2.0 > index:
-    #         # iterate forwards
-    #         for i, n in self.enumerate():
-    #             if i == index:
-    #                 self._insert(Node(value), n, after=True)
-    #                 break
-    #         else:
-    #             self._insert(Node(value), n, after=True)
-    #     else:
-    #         # iterate backwards
-    #         # [0, 1, 2] -> (2, 2), (1, 1), (0, 0)
-    #         for i, n in self.enumerate(reverse=True):
-    #             print "{}, {} in backwards iteration".format(i, n)
-    #             if index > i:
-    #                 self._insert(Node(value), n, after=True)
-    #                 break
-    #             elif i == index:
-    #                 self._insert(Node(value), n, after=False)
-    #                 break
-
-    # def _insert(self, node_to_insert, other_node=None, after=True):
-    #     if other_node and after:
-    #         print "inserting {} after {}".format(node_to_insert.value, other_node.value)
-    #         last = other_node.next
-    #         first = other_node
-    #         first.next = node_to_insert
-    #         node_to_insert.prev = first
-    #         node_to_insert.next = last
-    #         if last:
-    #             last.prev = node_to_insert
-    #     elif other_node:
-    #         print "inserting {} before {}".format(node_to_insert.value, other_node.value)
-    #         last = other_node
-    #         first = other_node.prev
-    #         last.prev = node_to_insert
-    #         node_to_insert.next = last
-    #         node_to_insert.prev = first
-    #         if first:
-    #             first.next = node_to_insert
-
-    #     elif after:
-    #         if self.tail:
-    #             self._insert(node_to_insert, self.tail)
-    #         self.tail = node_to_insert
-    #     else:
-    #         if self.head:
-    #             self._insert(node_to_insert, self.head, after=False)
-    #         else:
-    #             self.tail = node_to_insert
-    #         self.head = node_to_insert
-
-
 
 
 # Binary Tree

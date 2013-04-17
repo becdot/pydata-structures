@@ -2,6 +2,14 @@ import unittest
 
 from data_structures import Stack, Queue, Node, SinglyLinkedList, DoublyLinkedList
 
+def test_node(node, value, next, prev):
+    return (node.value == value) and (node.next == next if node.next == None else node.next.value == next
+        ) and (node.prev == prev if node.prev == None else node.prev.value == prev)
+
+def test_linked_list(llist, head, tail):
+    return (llist.head == head if llist.head == None else llist.head.value == head.value
+        ) and (llist.tail == tail if llist.tail == None else llist.tail.value == tail.value)
+
 class TestDataStructures(unittest.TestCase):
 
     def setUp(self):
@@ -133,58 +141,76 @@ class TestDataStructures(unittest.TestCase):
     def test_base_insert_moving_forwards_with_double(self):
         node1, node2, node3 = Node(1), Node(2), Node(3)
         self.double._insert(node1)
-        self.assertEqual(self.double.head.value, 1)
-        self.assertEqual(self.double.tail.value, 1)
-        self.assertEqual(self.double.head.next, None)
-        self.assertEqual(self.double.head.prev, None)
+        self.assertTrue(test_node(self.double[0], 1, None, None))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[0]))
+
         self.double._insert(node3, node1)
-        self.assertEqual(self.double.head.value, 1)
-        self.assertEqual(self.double.head.next.value, 3)
-        self.assertEqual(self.double.head.prev, None)      
-        self.assertEqual(self.double.tail.value, 3)
-        self.assertEqual(self.double.tail.next, None)
-        self.assertEqual(self.double.tail.prev.value, 1)  
+        self.assertTrue(test_node(self.double[0], 1, 3, None))
+        self.assertTrue(test_node(self.double[1], 3, None, 1))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[1]))
+
         self.double._insert(node2, node1)
-        self.assertEqual(self.double.head.value, 1)
-        self.assertEqual(self.double.head.next.value, 2)
-        self.assertEqual(self.double.head.prev, None) 
-        self.assertEqual(self.double.head.next.value, 2)
-        self.assertEqual(self.double.head.next.prev.value, 1)
-        self.assertEqual(self.double.head.next.next.value, 3) 
-        self.assertEqual(self.double.tail.value, 3)
-        self.assertEqual(self.double.tail.next, None)
-        self.assertEqual(self.double.tail.prev.value, 2)  
+        self.assertTrue(test_node(self.double[0], 1, 2, None))
+        self.assertTrue(test_node(self.double[1], 2, 3, 1))
+        self.assertTrue(test_node(self.double[2], 3, None, 2))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[2]))
+
         self.assertEqual(str(self.double), str([str(i) for i in range(1, 4)]))
 
     def test_base_insert_moving_backwards_with_double(self):
         node1, node2, node3 = Node(1), Node(2), Node(3)
         # insert node3 at the beginning/end of the list
         self.double._rev_insert(node3)
-        self.assertEqual(self.double.head.value, 3)
-        self.assertEqual(self.double.tail.value, 3)
-        self.assertEqual(self.double.head.next, None)
-        self.assertEqual(self.double.head.prev, None)
+        self.assertTrue(test_node(self.double[0], 3, None, None))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[0]))
         # insert node one before node 3 ([node1, node3])
         self.double._rev_insert(node1, node3)
-        self.assertEqual(self.double.head.value, 1)
-        self.assertEqual(self.double.head.next.value, 3)
-        self.assertEqual(self.double.head.prev, None)
-        self.assertEqual(self.double.tail.value, 3)
-        self.assertEqual(self.double.tail.next, None)
-        self.assertEqual(self.double.tail.prev.value, 1)
+        self.assertTrue(test_node(self.double[0], 1, 3, None))
+        self.assertTrue(test_node(self.double[1], 3, None, 1))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[1]))
         # insert node2 before node3 ([node1, node2, node3])
         self.double._rev_insert(node2, node3)
-        self.assertEqual(self.double.head.value, 1)
-        self.assertEqual(self.double.head.next.value, 2)
-        self.assertEqual(self.double.head.prev, None)
-        self.assertEqual(self.double.head.next.value, 2)
-        self.assertEqual(self.double.head.next.next.value, 3)
-        self.assertEqual(self.double.head.next.prev.value, 1)
-        self.assertEqual(self.double.tail.value, 3)
-        self.assertEqual(self.double.tail.next, None)
-        self.assertEqual(self.double.tail.prev.value, 2)
+        self.assertTrue(test_node(self.double[0], 1, 2, None))
+        self.assertTrue(test_node(self.double[1], 2, 3, 1))
+        self.assertTrue(test_node(self.double[2], 3, None, 2))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[2]))
         # check that the array is [node1, node2, node3]
         self.assertEqual(str(self.double), str([str(i) for i in range(1, 4)]))
+
+    def test_insert_at_beginning_of_double(self):
+        self.double.insert(2, 0)
+        self.assertTrue(test_node(self.double[0], 2, None, None))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[0]))
+        self.double.insert(1, 0)
+        self.assertTrue(test_node(self.double[0], 1, 2, None))
+        self.assertTrue(test_node(self.double[1], 2, None, 1))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[1]))
+
+
+    def test_insert_in_middle_and_end_of_double(self):
+        self.double.insert(1, 0)
+        self.double.insert(3, 1)
+        self.assertTrue(test_node(self.double[0], 1, 3, None))
+        self.assertTrue(test_node(self.double[1], 3, None, 1))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[1]))
+        self.double.insert(2, 1) 
+        self.assertTrue(test_node(self.double[0], 1, 2, None))
+        self.assertTrue(test_node(self.double[1], 2, 3, 1))
+        self.assertTrue(test_node(self.double[2], 3, None, 2))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[2]))
+        self.double.insert(5, 3) 
+        self.assertTrue(test_node(self.double[0], 1, 2, None))
+        self.assertTrue(test_node(self.double[1], 2, 3, 1))
+        self.assertTrue(test_node(self.double[2], 3, 5, 2))
+        self.assertTrue(test_node(self.double[3], 5, None, 3))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[3]))
+        self.double.insert(4, 3) 
+        self.assertTrue(test_node(self.double[0], 1, 2, None))
+        self.assertTrue(test_node(self.double[1], 2, 3, 1))
+        self.assertTrue(test_node(self.double[2], 3, 4, 2))
+        self.assertTrue(test_node(self.double[3], 4, 5, 3))
+        self.assertTrue(test_node(self.double[4], 5, None, 4))
+        self.assertTrue(test_linked_list(self.double, self.double[0], self.double[4]))
 
 
 if __name__ == '__main__':
