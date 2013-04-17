@@ -38,48 +38,69 @@ class TestDataStructures(unittest.TestCase):
 # SINGLY-LINKED LIST
     def test_add_nodes_to_single(self):
         node1, node2, node3 = Node(1), Node(2), Node(3)
-        self.single.insert(node1)
-        self.single.insert(node2, node1)
+        self.single._insert(node1)
+        self.single._insert(node2, node1)
         self.assertEqual(self.single.head.value, 1)
         next = self.single.head.next
         self.assertEqual(next, node2)
         self.assertEqual(next.value, 2)
-        self.single.insert(node3, node2)
+        self.single._insert(node3, node2)
         nextnext = self.single.head.next.next
         self.assertEqual(nextnext, node3)
 
     def test_add_node_to_beginning_of_single(self):
         node0, node1 = Node(0), Node(1)
-        self.single.insert(node1)
-        self.single.insert(node0)
+        self.single._insert(node1)
+        self.single._insert(node0)
         self.assertEqual(self.single.head.value, 0)
         self.assertEqual(self.single.head.next.value, 1)
 
     def test_remove_nodes_single(self):
         node1, node2, node3, node4 = Node(1), Node(2), Node(3), Node(4)
-        self.single.insert(node1)
-        self.single.insert(node2, node1)
-        self.single.insert(node3, node2)
-        self.single.insert(node4, node3)
-        self.single.remove(node2)
+        self.single._insert(node1)
+        self.single._insert(node2, node1)
+        self.single._insert(node3, node2)
+        self.single._insert(node4, node3)
+        self.single._remove(node2)
         self.assertEqual(node2.next, node4)
 
     def test_remove_node_from_beginning_single(self):
         node1, node2, node3 = Node(1), Node(2), Node(3)
-        self.single.insert(node1)
-        self.single.insert(node2, node1)
-        self.single.insert(node3, node2)
-        self.single.remove()
+        self.single._insert(node1)
+        self.single._insert(node2, node1)
+        self.single._insert(node3, node2)
+        self.single._remove()
         self.assertEqual(self.single.head, node2)
 
     def test_single_iteration(self):
         node1, node2, node3, node4 = Node(1), Node(2), Node(3), Node(4)
-        self.single.insert(node1)
-        self.single.insert(node2, node1)
-        self.single.insert(node3, node2)
-        self.single.insert(node4, node3)
+        self.single._insert(node1)
+        self.single._insert(node2, node1)
+        self.single._insert(node3, node2)
+        self.single._insert(node4, node3)
         self.assertEqual([node for node in self.single], [node1, node2, node3, node4])
 
+    def test_add_node_to_single_for_real(self):
+        self.single.insert(2, 0)
+        self.assertEqual(self.single[0].value, 2)
+        self.single.insert(1, 0)
+        self.assertEqual(self.single[0].value, 1)
+        self.single.insert(3, 2)
+        self.assertEqual(self.single[2].value, 3)
+        self.single.insert(4, 100)
+        self.assertEqual(self.single[3].value, 4)
+
+    def test_remove_node_from_single_for_real(self):
+        for i in range(4, 0, -1):
+            self.single.insert(i, 0)
+        # [1, 2, 3, 4]
+        self.single.remove(1)
+        # [1, 3, 4]
+        self.assertEqual(self.single[1].value, 3)
+        self.single.remove(2)
+        # [1, 3]
+        self.assertEqual(self.single[0].value, 1)
+        self.assertEqual(self.single[1].value, 3)
 
 if __name__ == '__main__':
     unittest.main()

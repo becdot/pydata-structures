@@ -63,8 +63,29 @@ class SinglyLinkedList(object):
 
     def __str__(self):
         return str([str(node) for node in self])
+
+    def __getitem__(self, index):
+        for i, item in enumerate(self):
+            if i == index:
+                return item
+        else:
+            raise IndexError
+
+    def __len__(self):
+        return sum(1 for i in self)
     
-    def insert(self, node, previous=None):
+    def insert(self, value, index):
+        if index == 0:
+            self._insert(Node(value))
+            return
+        for i, n in enumerate(self): 
+            if i == index:
+                self._insert(Node(value), n)
+                break
+        else:
+            self._insert(Node(value), n)
+
+    def _insert(self, node, previous=None):
         if previous:
             node.next = previous.next
             previous.next = node
@@ -72,9 +93,19 @@ class SinglyLinkedList(object):
             node.next = self.head
             self.head = node
 
-    def remove(self, previous=None):
+    def remove(self, index):
+        if index == 0:
+            self._remove()
+            return
+        for i, n in enumerate(self):
+            if i == index - 1:
+                self._remove(n)
+                break
+        else:
+            raise IndexError, "list assignment index out of range"
+
+    def _remove(self, previous=None):
         if previous:
             previous.next = previous.next.next if previous.next else None
         else:
             self.head = self.head.next
-
