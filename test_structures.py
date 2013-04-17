@@ -1,6 +1,6 @@
 import unittest
 
-from data_structures import Stack, Queue, Node, SinglyLinkedList
+from data_structures import Stack, Queue, Node, SinglyLinkedList, DoublyLinkedList
 
 class TestDataStructures(unittest.TestCase):
 
@@ -8,6 +8,7 @@ class TestDataStructures(unittest.TestCase):
         self.stack = Stack(range(1, 6))
         self.queue = Queue(range(1, 6))
         self.single = SinglyLinkedList()
+        self.double = DoublyLinkedList()
 
     # STACK
     def test_stack_push(self):
@@ -35,7 +36,7 @@ class TestDataStructures(unittest.TestCase):
         self.queue.pop()
         self.assertEqual(self.queue.peek(), 2)
 
-# SINGLY-LINKED LIST
+    # SINGLY-LINKED LIST
     def test_add_nodes_to_single(self):
         node1, node2, node3 = Node(1), Node(2), Node(3)
         self.single._insert(node1)
@@ -101,6 +102,47 @@ class TestDataStructures(unittest.TestCase):
         # [1, 3]
         self.assertEqual(self.single[0].value, 1)
         self.assertEqual(self.single[1].value, 3)
+
+   # DOUBLE-LINKED LIST
+    def test_iteration_double(self):
+        node1, node2, node3 = Node(1), Node(2), Node(3)
+        node1.next, node2.next, node3.next = node2, node3, None
+        node1.prev, node2.prev, node3.prev = None, node1, node2
+        self.double.head = node1
+        self.double.tail = node3
+        # test __iter__
+        self.assertEqual([str(i) for i in self.double], [str(i) for i in range(1, 4)])
+        # test reverse_iter()
+        self.assertEqual([str(i) for i in self.double.reverse_iter()], [str(i) for i in range(3, 0, -1)])
+        # test enumerate() in both directions
+        self.assertEqual([(i, str(n)) for i, n in self.double.enumerate()], [(i, str(n)) for i, n in enumerate(range(1, 4))])
+        self.assertEqual([(i, str(n)) for i, n in self.double.enumerate(reverse=True)], 
+                        [((abs(i - 2)), str(n)) for i, n in enumerate(range(3, 0, -1))])
+
+    def test_double_slicing(self):
+        node1, node2, node3 = Node(1), Node(2), Node(3)
+        node1.next, node2.next, node3.next = node2, node3, None
+        node1.prev, node2.prev, node3.prev = None, node1, node2
+        self.double.head = node1
+        self.double.tail = node3
+        self.assertEqual(self.double[0].value, 1)
+        self.assertEqual(self.double[1].value, 2)
+        self.assertEqual(self.double[2].value, 3)
+        self.assertRaises(IndexError, lambda val: self.double[val], 3)
+
+def test_base_insert_moving_forwards_with_double(self):
+        node1, node2, node3 = Node(1), Node(2), Node(3)
+        self.double._insert(node1)
+        self.assertEqual(self.double.head.value, 1)
+        self.assertEqual(self.double.tail.value, 1)
+        self.double._insert(node3, node1)
+        self.assertEqual(self.double.head.value, 1)
+        self.assertEqual(self.double.tail.value, 3)
+        self.double._insert(node2, node1)
+        self.assertEqual(self.double.head.value, 1)
+        self.assertEqual(self.double.tail.value, 3)
+        self.assertEqual(str(self.double), str([str(i) for i in range(1, 4)]))
+
 
 if __name__ == '__main__':
     unittest.main()

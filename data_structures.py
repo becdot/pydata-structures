@@ -39,11 +39,12 @@ class Queue(object):
 
 # Singly-linked list
 class Node(object):
-    "Node with pointer/s and value"
+    "Node with pointer/s and value -- self.prev used only for doubly-linked list"
 
     def __init__(self, value):
         self.value = value
         self.next = None
+        self.prev = None
 
     def __str__(self):
         return str(self.value)
@@ -109,3 +110,125 @@ class SinglyLinkedList(object):
             previous.next = previous.next.next if previous.next else None
         else:
             self.head = self.head.next
+
+# Doubly-linked list
+class DoublyLinkedList(object):
+
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def __iter__(self):
+        node = self.head
+        while node:
+            yield node
+            node = node.next
+
+    def reverse_iter(self):
+        node = self.tail
+        while node:
+            yield node
+            node = node.prev
+
+    def __len__(self):
+        return sum(1 for node in self)
+
+    def __str__(self):
+        return str([str(node) for node in self])
+
+    def __getitem__(self, index):
+        for i, n in self.enumerate():
+            if i == index:
+                return n
+        else:
+            raise IndexError
+
+    def enumerate(self, reverse=False):
+        n = (len(self) - 1) if reverse else 0
+        for elem in self.reverse_iter() if reverse else self:
+            yield n, elem
+            n = (n - 1) if reverse else (n + 1)
+
+
+    def _insert(self, node, prev_node=None):
+        # going only forwards!
+        self.tail = node if self.tail == prev_node else self.tail
+        if prev_node:
+            node.next = prev_node.next
+            node.prev = prev_node
+            prev_node.next = node
+            if node.next:
+                node.next.prev = node
+        else:
+            node.next = self.head
+            self.head = node
+            if self.head: 
+                self.head.prev = node
+            
+
+
+
+
+    # def insert(self, value, index):
+    #     if index == 0 or len(self) == 0:
+    #         self._insert(Node(value), after=False)
+    #         return
+    #     if len(self)/2.0 > index:
+    #         # iterate forwards
+    #         for i, n in self.enumerate():
+    #             if i == index:
+    #                 self._insert(Node(value), n, after=True)
+    #                 break
+    #         else:
+    #             self._insert(Node(value), n, after=True)
+    #     else:
+    #         # iterate backwards
+    #         # [0, 1, 2] -> (2, 2), (1, 1), (0, 0)
+    #         for i, n in self.enumerate(reverse=True):
+    #             print "{}, {} in backwards iteration".format(i, n)
+    #             if index > i:
+    #                 self._insert(Node(value), n, after=True)
+    #                 break
+    #             elif i == index:
+    #                 self._insert(Node(value), n, after=False)
+    #                 break
+
+    # def _insert(self, node_to_insert, other_node=None, after=True):
+    #     if other_node and after:
+    #         print "inserting {} after {}".format(node_to_insert.value, other_node.value)
+    #         last = other_node.next
+    #         first = other_node
+    #         first.next = node_to_insert
+    #         node_to_insert.prev = first
+    #         node_to_insert.next = last
+    #         if last:
+    #             last.prev = node_to_insert
+    #     elif other_node:
+    #         print "inserting {} before {}".format(node_to_insert.value, other_node.value)
+    #         last = other_node
+    #         first = other_node.prev
+    #         last.prev = node_to_insert
+    #         node_to_insert.next = last
+    #         node_to_insert.prev = first
+    #         if first:
+    #             first.next = node_to_insert
+
+    #     elif after:
+    #         if self.tail:
+    #             self._insert(node_to_insert, self.tail)
+    #         self.tail = node_to_insert
+    #     else:
+    #         if self.head:
+    #             self._insert(node_to_insert, self.head, after=False)
+    #         else:
+    #             self.tail = node_to_insert
+    #         self.head = node_to_insert
+
+
+
+
+# Binary Tree
+
+# Heap
+
+# (Hash table, Trie)
