@@ -160,10 +160,27 @@ class DoublyLinkedList(object):
             if node.next:
                 node.next.prev = node
         else:
-            node.next = self.head
-            self.head = node
             if self.head: 
                 self.head.prev = node
+            node.next = self.head
+            self.head = node
+
+
+    def _rev_insert(self, node, prev_node=None):
+        # going backwards!
+        self.head = node if self.head == prev_node else self.head
+        if prev_node:
+            node.prev = prev_node.prev
+            node.next = prev_node
+            prev_node.prev = node
+            if node.prev:
+                node.prev.next = node
+        else:
+            if self.tail:
+                self.tail.next = node
+            node.prev = self.tail
+            self.tail = node
+
             
 
 
