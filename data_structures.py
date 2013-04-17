@@ -37,3 +37,44 @@ class Queue(object):
     def peek(self):
         return self.queue[0]
 
+# Singly-linked list
+class Node(object):
+    "Node with pointer/s and value"
+
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+    def __str__(self):
+        return str(self.value)
+
+class SinglyLinkedList(object):
+    """Collection of nodes, each with a value and a pointer to the next node.
+        Nodes can be inserted and removed after existing nodes."""
+
+    def __init__(self):
+        self.head = None
+
+    def __iter__(self):
+        node = self.head
+        while node:
+            yield node
+            node = node.next
+
+    def __str__(self):
+        return str([str(node) for node in self])
+    
+    def insert(self, node, previous=None):
+        if previous:
+            node.next = previous.next
+            previous.next = node
+        else:
+            node.next = self.head
+            self.head = node
+
+    def remove(self, previous=None):
+        if previous:
+            previous.next = previous.next.next if previous.next else None
+        else:
+            self.head = self.head.next
+
