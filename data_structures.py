@@ -124,13 +124,6 @@ class DoublyLinkedList(object):
             yield node
             node = node.next
 
-    def reverse_iter(self):
-        "Iterates through the list backwards"
-        node = self.tail
-        while node:
-            yield node
-            node = node.prev
-
     def __len__(self):
         return sum(1 for node in self)
 
@@ -138,19 +131,11 @@ class DoublyLinkedList(object):
         return str([str(node) for node in self])
 
     def __getitem__(self, index):
-        for i, n in self.enumerate():
+        for i, n in enumerate(self):
             if i == index:
                 return n
         else:
             raise IndexError
-
-    def enumerate(self, reverse=False):
-        """Yields (index, node) in increasing order if going forwards (e.g. (0, node0), (1, node1)... (4, node4))
-            and decreasing order if going in reverse (e.g. (4, node4), (3, node3)... (0, node0))"""
-        n = (len(self) - 1) if reverse else 0
-        for elem in self.reverse_iter() if reverse else self:
-            yield n, elem
-            n = (n - 1) if reverse else (n + 1)
 
     def insert(self, value, index):
         """Inserts Node(value) at the index -- iterates forward if index is in the first half of the list
@@ -164,14 +149,15 @@ class DoublyLinkedList(object):
         # iterate forwards
         elif len(self)/2.0 > index:
             # iterate forwards
-            for i, n in self.enumerate():
+            for i, n in enumerate(self):
                 if i == index:
                     self._insert(Node(value), n)
         # iterate backwards
         else:
-            for i, n in self.enumerate(reverse=True):
-                if i == index:
+            for i, n in enumerate(reversed(self)):
+                if abs(i - len(self) + 1) == index:
                     self._rev_insert(Node(value), n)
+                    break
 
     def _insert(self, node, prev_node=None):
         """Inserts node after prev_node -- base implementation of insert().  
@@ -190,7 +176,8 @@ class DoublyLinkedList(object):
             self.head = node
 
     def _rev_insert(self, node, prev_node=None):
-        """Inserts node before prev_node (e.g given a list [A, C], insert(B, C) -> [A, B, C])
+        """Inserts node after prev_node, moving in reverse.
+           e.g given a list [A, C], insert(B, C) -> [A, B, C]
             If prev_node is not provided, inserts at the end of the list"""
         self.head = node if self.head == prev_node else self.head
         if prev_node:

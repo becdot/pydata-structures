@@ -120,12 +120,8 @@ class TestDataStructures(unittest.TestCase):
         self.double.tail = node3
         # test __iter__
         self.assertEqual([str(i) for i in self.double], [str(i) for i in range(1, 4)])
-        # test reverse_iter()
-        self.assertEqual([str(i) for i in self.double.reverse_iter()], [str(i) for i in range(3, 0, -1)])
-        # test enumerate() in both directions
-        self.assertEqual([(i, str(n)) for i, n in self.double.enumerate()], [(i, str(n)) for i, n in enumerate(range(1, 4))])
-        self.assertEqual([(i, str(n)) for i, n in self.double.enumerate(reverse=True)], 
-                        [((abs(i - 2)), str(n)) for i, n in enumerate(range(3, 0, -1))])
+        # test iterating over reversed
+        self.assertEqual([str(i) for i in reversed(self.double)], [str(i) for i in range(3, 0, -1)])
 
     def test_double_slicing(self):
         node1, node2, node3 = Node(1), Node(2), Node(3)
@@ -185,7 +181,6 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_node(self.double[0], 1, 2, None))
         self.assertTrue(test_node(self.double[1], 2, None, 1))
         self.assertTrue(test_linked_list(self.double, self.double[0], self.double[1]))
-
 
     def test_insert_in_middle_and_end_of_double(self):
         self.double.insert(1, 0)
