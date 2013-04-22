@@ -211,7 +211,11 @@ class BinaryNode(object):
         return self.value == other.value if isinstance(other, BinaryNode) else False
 
     def __ne__(self):
-        return self.value != other.value if isinstance(other, BinaryNode) else True  
+        return self.value != other.value if isinstance(other, BinaryNode) else True 
+
+    @property
+    def empty(self):
+        return not(self.right or self.left) 
 
     def add_child(self, node, child=None):
         # we want to insert the node internally
@@ -224,9 +228,9 @@ class BinaryNode(object):
         # we want to add the node externally
         else:
             # add node to self.left if self.left is currently unassigned
-            self.left = None if self.left else node
+            self.left = self.left if self.left else node
             # add node to self.right if self.right is unassigned and you haven't just assigned self.left
-            self.right = None if self.right or self.left == node else node
+            self.right = self.right if self.right or self.left == node else node
             node.parent = self
 
 class BinaryTree(object):
@@ -234,8 +238,37 @@ class BinaryTree(object):
     def __init__(self):
         self.root = None
 
-    def __iter__(self):
-        pass
+    def search(self, value):
+        seen = set()
+        return self.depth(self.root, value, seen)
+
+    def depth(self, node, prize, seen):
+        if node.value == prize:
+            return node
+        # no matches
+        elif node.left in seen and node.right in seen and node.parent == None:
+            return None
+        # have searched all children, need to move up a level
+        elif node.empty or node.right in seen:
+
+            seen.add(node)
+            return self.depth(node.parent, prize, seen)
+        # have searched left children but not right
+        elif node.left in seen:
+            seen.add(node)
+            return self.depth(node.right, prize, seen)
+        elif node in seen:
+            seen.add(node)
+            return self.depth(node.parent, prize, seen)
+        else:
+            seen.add(node)
+            return self.depth(node.left, prize, seen)
+
+    # def insert(self, value, parent_value, child_node=None):
+    #     new_node = BinaryNode(value)
+    #     for node in self:
+    #         if node.value == parent_value:
+    #             node.parent.add_child(node, child_node)
 
 # Heap
 

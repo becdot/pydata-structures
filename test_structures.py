@@ -249,6 +249,36 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(two, 2, 4, None, 1))
         self.assertTrue(test_binary_node(four, 4, None, None, 2))
 
+    def test_depth_first_search(self):
+        node1 = BinaryNode(1)
+        node2 = BinaryNode(2)
+        node3 = BinaryNode(3)
+        node4 = BinaryNode(4)
+        node5 = BinaryNode(5)
+        node6 = BinaryNode(6)
+        node7 = BinaryNode(7)
+        node8 = BinaryNode(8)
+        node1.add_child(node2)
+        node1.add_child(node5)
+        node2.add_child(node3)
+        node2.add_child(node4)
+        node1.add_child(node5)
+        node5.add_child(node6)
+        node6.add_child(node7)
+        node6.add_child(node8)
+
+#               1
+#             /   \
+#           2       5
+#         /   \     /
+#       3       4   6
+#                  / \
+#                7    8
+#
+
+        self.btree.root = node1
+        self.btree.search(5)
+
 
 
 
