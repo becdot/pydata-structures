@@ -1,6 +1,6 @@
 import unittest
 
-from data_structures import Stack, Queue, Node, SinglyLinkedList, DoublyLinkedList
+from data_structures import Stack, Queue, Node, SinglyLinkedList, DoublyLinkedList, BinaryNode, BinaryTree
 
 def test_node(node, value, next, prev):
     return (node.value == value) and (node.next == next if node.next == None else node.next.value == next
@@ -10,6 +10,12 @@ def test_linked_list(llist, head, tail):
     return (llist.head == head if llist.head == None else llist.head.value == head.value
         ) and (llist.tail == tail if llist.tail == None else llist.tail.value == tail.value)
 
+def test_binary_node(node, value, left, right, parent):
+        return (node.value == value) and (node.left == left if node.left == None else node.left.value == left
+        ) and (node.right == right if node.right == None else node.right.value == right) and (
+        node.parent == parent if node.parent == None else node.parent.value == parent)
+
+
 class TestDataStructures(unittest.TestCase):
 
     def setUp(self):
@@ -17,6 +23,7 @@ class TestDataStructures(unittest.TestCase):
         self.queue = Queue(range(1, 6))
         self.single = SinglyLinkedList()
         self.double = DoublyLinkedList()
+        self.btree = BinaryTree()
 
     # STACK
     def test_stack_push(self):
@@ -206,6 +213,45 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_node(self.double[3], 4, 5, 3))
         self.assertTrue(test_node(self.double[4], 5, None, 4))
         self.assertTrue(test_linked_list(self.double, self.double[0], self.double[4]))
+
+    # Binary Tree
+    def test_binary_node_equality(self):
+        one = BinaryNode(1)
+        one2 = BinaryNode(1)
+        self.assertTrue(one == one2)
+        two = BinaryNode(2)
+        self.assertFalse(one == two)
+
+    def test_add_internal_child_to_binary_node(self):
+        one = BinaryNode(1)
+        two = BinaryNode(2)
+        three = BinaryNode(3)
+        one.left = three
+        # one = {left: 3, right: None}
+        one.add_child(two, three)
+        self.assertTrue(test_binary_node(one, 1, 2, None, None))
+        self.assertTrue(test_binary_node(two, 2, 3, None, 1))
+        self.assertTrue(test_binary_node(three, 3, None, None, 2))
+
+    def test_add_external_child_to_binary_node(self):
+        one = BinaryNode(1)
+        two = BinaryNode(2)
+        one.add_child(two)
+        self.assertTrue(test_binary_node(one, 1, 2, None, None))
+        self.assertTrue(test_binary_node(two, 2, None, None, 1))
+        three = BinaryNode(3)
+        one.add_child(three)
+        self.assertTrue(test_binary_node(one, 1, 2, 3, None))
+        self.assertTrue(test_binary_node(two, 2, None, None, 1))
+        self.assertTrue(test_binary_node(three, 3, None, None, 1))
+        four = BinaryNode(4)
+        two.add_child(four)
+        self.assertTrue(test_binary_node(two, 2, 4, None, 1))
+        self.assertTrue(test_binary_node(four, 4, None, None, 2))
+
+
+
+
 
 
 if __name__ == '__main__':

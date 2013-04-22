@@ -194,6 +194,48 @@ class DoublyLinkedList(object):
 
 
 # Binary Tree
+## UNSORTED
+class BinaryNode(object):
+    # always inserts to the left
+
+    def __init__(self, value):
+        self.value = value
+        self.parent = None
+        self.right = None
+        self.left = None
+
+    def __str__(self):
+        return str(self.value)
+
+    def __eq__(self, other):
+        return self.value == other.value if isinstance(other, BinaryNode) else False
+
+    def __ne__(self):
+        return self.value != other.value if isinstance(other, BinaryNode) else True  
+
+    def add_child(self, node, child=None):
+        # we want to insert the node internally
+        if child:
+            direction = 'left' if self.left == child else 'right'
+            node.left = getattr(self, direction)
+            node.parent = self
+            child.parent = node
+            setattr(self, direction, node)
+        # we want to add the node externally
+        else:
+            # add node to self.left if self.left is currently unassigned
+            self.left = None if self.left else node
+            # add node to self.right if self.right is unassigned and you haven't just assigned self.left
+            self.right = None if self.right or self.left == node else node
+            node.parent = self
+
+class BinaryTree(object):
+
+    def __init__(self):
+        self.root = None
+
+    def __iter__(self):
+        pass
 
 # Heap
 
