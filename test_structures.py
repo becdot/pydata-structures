@@ -275,9 +275,9 @@ class TestDataStructures(unittest.TestCase):
 #                  / \
 #                7    8
 #
-
         self.btree.root = node1
-        self.btree.search(5)
+        self.assertTrue(self.btree.search(5))
+        self.assertFalse(self.btree.search(9))
 
 
 

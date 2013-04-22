@@ -239,30 +239,18 @@ class BinaryTree(object):
         self.root = None
 
     def search(self, value):
-        seen = set()
-        return self.depth(self.root, value, seen)
+        return self.depth(self.root, value)
 
-    def depth(self, node, prize, seen):
+    def depth(self, node, prize):
         if node.value == prize:
             return node
-        # no matches
-        elif node.left in seen and node.right in seen and node.parent == None:
+        elif node.empty:
             return None
-        # have searched all children, need to move up a level
-        elif node.empty or node.right in seen:
-
-            seen.add(node)
-            return self.depth(node.parent, prize, seen)
-        # have searched left children but not right
-        elif node.left in seen:
-            seen.add(node)
-            return self.depth(node.right, prize, seen)
-        elif node in seen:
-            seen.add(node)
-            return self.depth(node.parent, prize, seen)
         else:
-            seen.add(node)
-            return self.depth(node.left, prize, seen)
+            left = self.depth(node.left, prize) if node.left else None
+            right = self.depth(node.right, prize) if node.right else None
+            return left or right
+
 
     # def insert(self, value, parent_value, child_node=None):
     #     new_node = BinaryNode(value)
