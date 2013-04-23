@@ -309,6 +309,11 @@ class BinaryTree(object):
 # Binary Search Tree
 class BinarySearchNode(BinaryNode):
     
+    def __contains__(self, value):
+        if self.search(value):
+            return True
+        return False
+
     def search(self, value):
         if self.value == value:
             return self
@@ -317,13 +322,28 @@ class BinarySearchNode(BinaryNode):
         else:
             return self.left.search(value) if self.left else None
 
+    def insert(self, value):
+        if self.value == value:
+            raise IndexError("{} already exists".format(value))
+        elif self.right and value > self.value:
+            return self.right.insert(value)
+        elif self.left and value < self.value:
+            return self.left.insert(value)
+        elif value > self.value:
+            self.right = BinarySearchNode(value)
+            self.right.parent = self
+        else:
+            self.left = BinarySearchNode(value)
+            self.left.parent = self
+
+
+
 class BinarySearchTree(object):
 
     def __init__(self):
         self.root = None
 
-    def insert(self, value):
-        pass
+
 
 
 # Heap

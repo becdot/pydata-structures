@@ -81,23 +81,15 @@ def binary_search_tree():
 #      /           \
 #     1             7
 
-    node1 = BinarySearchNode(1)
-    node2 = BinarySearchNode(2)
-    node3 = BinarySearchNode(3)
-    node4 = BinarySearchNode(4)
     node5 = BinarySearchNode(5)
-    node6 = BinarySearchNode(6)
-    node7 = BinarySearchNode(7)
-    node8 = BinarySearchNode(8)
 
-    node5.insert(node3)
-    node5.insert(node8)
-    node3.insert(node2)
-    node3.insert(node4)
-    node2.insert(node1)
-    node8.insert(node6)
-    node6.right = node7
-    node7.parent = node6
+    node5.insert(3)
+    node5.insert(8)
+    node5.insert(4)
+    node5.insert(2)
+    node5.insert(6)
+    node5.insert(1)
+    node5.insert(7)
 
     return node5
 
@@ -394,6 +386,39 @@ class TestDataStructures(unittest.TestCase):
         self.assertFalse(root.search(0))
         self.assertFalse(root.search(9))
 
+    def test_binary_search_insert(self):
+    #               5
+    #             /    \
+    #           3        8
+    #         /  \     /
+    #       2     4   6
+
+        node5 = BinarySearchNode(5)
+        node5.insert(3)
+        self.assertTrue(test_binary_node(node5, 5, 3, None, None))
+        self.assertTrue(test_binary_node(node5.left, 3, None, None, 5))
+        node5.insert(8)
+        self.assertTrue(test_binary_node(node5, 5, 3, 8, None))
+        self.assertTrue(test_binary_node(node5.left, 3, None, None, 5))
+        self.assertTrue(test_binary_node(node5.right, 8, None, None, 5))
+        node5.insert(4)
+        self.assertTrue(test_binary_node(node5, 5, 3, 8, None))
+        self.assertTrue(test_binary_node(node5.left, 3, None, 4, 5))
+        self.assertTrue(test_binary_node(node5.right, 8, None, None, 5))
+        self.assertTrue(test_binary_node(node5.left.right, 4, None, None, 3))
+        node5.insert(2)
+        self.assertTrue(test_binary_node(node5, 5, 3, 8, None))
+        self.assertTrue(test_binary_node(node5.left, 3, 2, 4, 5))
+        self.assertTrue(test_binary_node(node5.right, 8, None, None, 5))
+        self.assertTrue(test_binary_node(node5.left.left, 2, None, None, 3))
+        self.assertTrue(test_binary_node(node5.left.right, 4, None, None, 3))
+        node5.insert(6)
+        self.assertTrue(test_binary_node(node5, 5, 3, 8, None))
+        self.assertTrue(test_binary_node(node5.left, 3, 2, 4, 5))
+        self.assertTrue(test_binary_node(node5.right, 8, 6, None, 5))
+        self.assertTrue(test_binary_node(node5.left.left, 2, None, None, 3))
+        self.assertTrue(test_binary_node(node5.left.right, 4, None, None, 3))
+        self.assertTrue(test_binary_node(node5.right.left, 6, None, None, 8))
 
 
 
