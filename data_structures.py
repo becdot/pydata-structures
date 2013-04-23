@@ -241,14 +241,9 @@ class BinaryTree(object):
         self.root = None
 
     def __iter__(self):
-        node = self.root
-
-    def search_deep(self, value):
-        return self.depth(self.root, value)
-
-    def search_wide(self, value):
-        return self.breadth([self.root], value)
-
+        gen = self.iter_depth(self.root)
+        for node in gen:
+            yield node
 
     def iter_depth(self, node):
         if node.empty:
@@ -264,7 +259,6 @@ class BinaryTree(object):
                 for n in right:
                     yield n
 
-
     def iter_breadth(self, node_list):
         next = []
         for node in node_list:
@@ -276,9 +270,18 @@ class BinaryTree(object):
             for n in gen:
                 yield n
 
+    def search_deep(self, value):
+        for node in self:
+            if node.value == value:
+                return node
+        return None
 
-
-
+    def search_wide(self, value):
+        gen = self.iter_breadth([self.root])
+        for node in gen:
+            if node.value == value:
+                return node
+        return None
 
 
     def depth(self, node, prize):

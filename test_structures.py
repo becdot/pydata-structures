@@ -324,7 +324,7 @@ class TestDataStructures(unittest.TestCase):
         node5.insert(node6)
         node6.insert(node7)
         node6.insert(node8)
-        
+
 #               1
 #             /   \
 #           2       5
@@ -364,6 +364,66 @@ class TestDataStructures(unittest.TestCase):
         self.btree.root = node1
         self.assertEqual([int(str(n)) for n in self.btree.iter_breadth([self.btree.root])], range(1, 9))
 
+    def test_iter_func_binary_tree(self):
+        node1 = BinaryNode(1)
+        node2 = BinaryNode(2)
+        node3 = BinaryNode(3)
+        node4 = BinaryNode(4)
+        node5 = BinaryNode(5)
+        node6 = BinaryNode(6)
+        node7 = BinaryNode(7)
+        node8 = BinaryNode(8)
+        node1.insert(node2)
+        node1.insert(node5)
+        node2.insert(node3)
+        node2.insert(node4)
+        node5.insert(node6)
+        node6.insert(node7)
+        node6.insert(node8)
+        self.btree.root = node1
+
+        self.assertEquals([int(str(n)) for n in self.btree], range(1, 9))
+
+    def test_deep_search(self):
+        node1 = BinaryNode(1)
+        node2 = BinaryNode(2)
+        node3 = BinaryNode(3)
+        node4 = BinaryNode(4)
+        node5 = BinaryNode(5)
+        node6 = BinaryNode(6)
+        node7 = BinaryNode(7)
+        node8 = BinaryNode(8)
+        node1.insert(node2)
+        node1.insert(node5)
+        node2.insert(node3)
+        node2.insert(node4)
+        node5.insert(node6)
+        node6.insert(node7)
+        node6.insert(node8)
+        self.btree.root = node1
+
+        self.assertEqual(self.btree.search_deep(5).value, 5)
+        self.assertFalse(self.btree.search_deep(9))
+
+    def test_wide_search(self):
+        node1 = BinaryNode(1)
+        node2 = BinaryNode(2)
+        node3 = BinaryNode(3)
+        node4 = BinaryNode(4)
+        node5 = BinaryNode(5)
+        node6 = BinaryNode(6)
+        node7 = BinaryNode(7)
+        node8 = BinaryNode(8)
+        node1.insert(node2)
+        node1.insert(node3)
+        node2.insert(node4)
+        node2.insert(node5)
+        node3.insert(node6)
+        node6.insert(node7)
+        node6.insert(node8)
+        self.btree.root = node1
+        self.assertEqual(self.btree.search_deep(5).value, 5)
+        self.assertFalse(self.btree.search_deep(9))
 
 
 
