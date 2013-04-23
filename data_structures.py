@@ -235,6 +235,16 @@ class BinaryNode(object):
             self.right = self.right if self.right or self.left == node else node
             node.parent = self
 
+    def depth(self):
+        yield self
+        if self.left:
+            for node in self.left.depth():
+                yield node
+        if self.right:
+            for node in self.right.depth():
+                yield node
+
+
 class BinaryTree(object):
 
     def __init__(self):
@@ -282,8 +292,7 @@ class BinaryTree(object):
             next.append(node.left) if node.left else None
             next.append(node.right) if node.right else None
         if next:
-            gen = self.breadth_gen(next)
-            for n in gen:
+            for n in self.breadth_gen(next):
                 yield n
 
     def insert(self, value, parent_value=None, child_value=None):

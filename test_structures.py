@@ -16,7 +16,7 @@ def test_binary_node(node, value, left, right, parent):
         node.parent == parent if node.parent == None else node.parent.value == parent)
 
 def deep_btree():
-    "Returns a binary tree filled in the below pattern"
+    "Returns a root node filled in the below pattern"
     #               1
     #             /   \
     #           2       5
@@ -41,12 +41,10 @@ def deep_btree():
     node6.insert(node7)
     node6.insert(node8)
 
-    tree = BinaryTree()
-    tree.root = node1
-    return tree
+    return node1
 
 def wide_btree():
-    "Returns a binary tree filled in the below pattern"
+    "Returns a root node filled in the below pattern"
 #               1
 #             /   \
 #           2       3
@@ -71,9 +69,7 @@ def wide_btree():
     node6.insert(node7)
     node6.insert(node8)
 
-    tree = BinaryTree()
-    tree.root = node1
-    return tree
+    return node1
 
 
 
@@ -311,23 +307,23 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(four, 4, None, None, 2))
 
     def test_depth_first_generation(self):
-        tree = deep_btree()
-        self.assertEquals([int(str(n)) for n in tree.depth_gen(tree.root)], range(1, 9))
+        self.btree.root = deep_btree()
+        self.assertEquals([int(str(n)) for n in self.btree.depth_gen(self.btree.root)], range(1, 9))
 
     def test_breadth_first_generation(self):
-        tree = wide_btree()
-        self.assertEqual([int(str(n)) for n in tree.breadth_gen([tree.root])], range(1, 9))
+        self.btree.root = wide_btree()
+        self.assertEqual([int(str(n)) for n in self.btree.breadth_gen([self.btree.root])], range(1, 9))
 
     def test_binary_tree_iteration(self):
-        tree = deep_btree()
-        self.assertEquals([int(str(n)) for n in tree], range(1, 9))
+        self.btree.root = deep_btree()
+        self.assertEquals([int(str(n)) for n in self.btree], range(1, 9))
 
     def test_contains(self):
-        tree = deep_btree()
+        self.btree.root = deep_btree()
         for i in range(1, 9):
-            self.assertTrue(i in tree)
-        self.assertFalse(0 in tree)
-        self.assertFalse(9 in tree)
+            self.assertTrue(i in self.btree)
+        self.assertFalse(0 in self.btree)
+        self.assertFalse(9 in self.btree)
 
     def test_insert_into_binary_tree(self):
         ## note - indexing grabs the node with that VALUE, not the node that exists at that index
@@ -357,6 +353,13 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(self.btree[2], 2, 4, None, 1))
         self.assertTrue(test_binary_node(self.btree[3], 3, None, None, 1))
         self.assertTrue(test_binary_node(self.btree[4], 4, None, None, 2))
+
+    def test_depth_on_binary_node(self):
+        root = deep_btree()
+        self.assertEqual([int(str(n)) for n in root.depth()], range(1, 9))
+
+
+
 
 
 
