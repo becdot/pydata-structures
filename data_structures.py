@@ -235,14 +235,14 @@ class BinaryNode(object):
             self.right = self.right if self.right or self.left == node else node
             node.parent = self
 
-    def depth(self):
-        yield self
-        if self.left:
-            for node in self.left.depth():
-                yield node
-        if self.right:
-            for node in self.right.depth():
-                yield node
+    # def depth(self):
+    #     yield self
+    #     if self.left:
+    #         for node in self.left.depth():
+    #             yield node
+    #     if self.right:
+    #         for node in self.right.depth():
+    #             yield node
 
 
 class BinaryTree(object):
@@ -252,8 +252,7 @@ class BinaryTree(object):
 
     def __iter__(self):
         "Iterates depthwise through the tree"
-        gen = self.depth_gen(self.root)
-        for node in gen:
+        for node in self.depth_gen(self.root):
             yield node
 
     def __contains__(self, value):
@@ -285,7 +284,7 @@ class BinaryTree(object):
                     yield n
 
     def breadth_gen(self, node_list):
-        "Just for fun"
+        "Just for fun -- semi-lazy implementation"
         next = []
         for node in node_list:
             yield node
@@ -306,6 +305,26 @@ class BinaryTree(object):
                     node.insert(new_node, child_node)
         else:
             self.root = BinaryNode(value)
+
+# Binary Search Tree
+class BinarySearchNode(BinaryNode):
+    
+    def search(self, value):
+        if self.value == value:
+            return self
+        elif value > self.value:
+            return self.right.search(value) if self.right else None
+        else:
+            return self.left.search(value) if self.left else None
+
+class BinarySearchTree(object):
+
+    def __init__(self):
+        self.root = None
+
+    def insert(self, value):
+        pass
+
 
 # Heap
 
