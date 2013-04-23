@@ -217,7 +217,9 @@ class BinaryNode(object):
     def empty(self):
         return not(self.right or self.left) 
 
-    def add_child(self, node, child=None):
+    def insert(self, node, child=None):
+        if child and (child.left or child.right):
+            raise AttributeError("Node cannot have any children.")
         # we want to insert the node internally
         if child:
             direction = 'left' if self.left == child else 'right'
@@ -238,8 +240,46 @@ class BinaryTree(object):
     def __init__(self):
         self.root = None
 
-    def search(self, value):
+    def __iter__(self):
+        node = self.root
+
+    def search_deep(self, value):
         return self.depth(self.root, value)
+
+    def search_wide(self, value):
+        return self.breadth([self.root], value)
+
+
+    def iter_depth(self, node):
+        if node.empty:
+            yield node
+        else:
+            yield node
+            if node.left:
+                left = self.iter_depth(node.left)
+                for n in left:
+                    yield n
+            if node.right:
+                right = self.iter_depth(node.right)
+                for n in right:
+                    yield n
+
+
+    def iter_breadth(self, node_list):
+        next = []
+        for node in node_list:
+            yield node
+            next.append(node.left) if node.left else None
+            next.append(node.right) if node.right else None
+        if next:
+            gen = self.iter_breadth(next)
+            for n in gen:
+                yield n
+
+
+
+
+
 
     def depth(self, node, prize):
         if node.value == prize:
@@ -250,6 +290,18 @@ class BinaryTree(object):
             left = self.depth(node.left, prize) if node.left else None
             right = self.depth(node.right, prize) if node.right else None
             return left or right
+
+    def breadth(self, nodes, prize):
+        next_level = []
+        for node in nodes:
+            if node.value == prize:
+                return node
+            else:
+                next_level.append(node.left) if node.left else None
+                next_level.append(node.right) if node.right else None
+        if next_level:
+            return self.breadth(next_level, prize)
+        return None
 
 
     # def insert(self, value, parent_value, child_node=None):
