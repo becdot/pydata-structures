@@ -15,6 +15,67 @@ def test_binary_node(node, value, left, right, parent):
         ) and (node.right == right if node.right == None else node.right.value == right) and (
         node.parent == parent if node.parent == None else node.parent.value == parent)
 
+def deep_btree():
+    "Returns a binary tree filled in the below pattern"
+    #               1
+    #             /   \
+    #           2       5
+    #         /   \     /
+    #       3       4   6
+    #                  / \
+    #                7    8
+
+    node1 = BinaryNode(1)
+    node2 = BinaryNode(2)
+    node3 = BinaryNode(3)
+    node4 = BinaryNode(4)
+    node5 = BinaryNode(5)
+    node6 = BinaryNode(6)
+    node7 = BinaryNode(7)
+    node8 = BinaryNode(8)
+    node1.insert(node2)
+    node1.insert(node5)
+    node2.insert(node3)
+    node2.insert(node4)
+    node5.insert(node6)
+    node6.insert(node7)
+    node6.insert(node8)
+
+    tree = BinaryTree()
+    tree.root = node1
+    return tree
+
+def wide_btree():
+    "Returns a binary tree filled in the below pattern"
+#               1
+#             /   \
+#           2       3
+#         /   \     /
+#       4       5   6
+#                  / \
+#                7    8
+    
+    node1 = BinaryNode(1)
+    node2 = BinaryNode(2)
+    node3 = BinaryNode(3)
+    node4 = BinaryNode(4)
+    node5 = BinaryNode(5)
+    node6 = BinaryNode(6)
+    node7 = BinaryNode(7)
+    node8 = BinaryNode(8)
+    node1.insert(node2)
+    node1.insert(node3)
+    node2.insert(node4)
+    node2.insert(node5)
+    node3.insert(node6)
+    node6.insert(node7)
+    node6.insert(node8)
+
+    tree = BinaryTree()
+    tree.root = node1
+    return tree
+
+
 
 class TestDataStructures(unittest.TestCase):
 
@@ -249,181 +310,29 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(two, 2, 4, None, 1))
         self.assertTrue(test_binary_node(four, 4, None, None, 2))
 
-    def test_depth_first_search(self):
-        node1 = BinaryNode(1)
-        node2 = BinaryNode(2)
-        node3 = BinaryNode(3)
-        node4 = BinaryNode(4)
-        node5 = BinaryNode(5)
-        node6 = BinaryNode(6)
-        node7 = BinaryNode(7)
-        node8 = BinaryNode(8)
-        node1.insert(node2)
-        node1.insert(node5)
-        node2.insert(node3)
-        node2.insert(node4)
-        node5.insert(node6)
-        node6.insert(node7)
-        node6.insert(node8)
+    def test_depth_first_generation(self):
+        tree = deep_btree()
+        self.assertEquals([int(str(n)) for n in tree.depth_gen(tree.root)], range(1, 9))
 
-#               1
-#             /   \
-#           2       5
-#         /   \     /
-#       3       4   6
-#                  / \
-#                7    8
+    def test_breadth_first_generation(self):
+        tree = wide_btree()
+        self.assertEqual([int(str(n)) for n in tree.breadth_gen([tree.root])], range(1, 9))
 
-        self.btree.root = node1
-        self.assertTrue(self.btree.search_deep(5))
-        self.assertFalse(self.btree.search_deep(9))
+    def test_binary_tree_iteration(self):
+        tree = deep_btree()
+        self.assertEquals([int(str(n)) for n in tree], range(1, 9))
+
+    def test_contains(self):
+        tree = deep_btree()
+        for i in range(1, 9):
+            self.assertTrue(i in tree)
+        self.assertFalse(0 in tree)
+        self.assertFalse(9 in tree)
+
+    def test_insert_into_binary_tree(self):
+        pass
 
 
-    def test_breadth_first_search(self):
-        node1 = BinaryNode(1)
-        node2 = BinaryNode(2)
-        node3 = BinaryNode(3)
-        node4 = BinaryNode(4)
-        node5 = BinaryNode(5)
-        node6 = BinaryNode(6)
-        node7 = BinaryNode(7)
-        node8 = BinaryNode(8)
-        node1.insert(node2)
-        node1.insert(node3)
-        node2.insert(node4)
-        node2.insert(node5)
-        node3.insert(node6)
-        node6.insert(node7)
-        node6.insert(node8)
-
-#               1
-#             /   \
-#           2       3
-#         /   \     /
-#       4       5   6
-#                  / \
-#                7    8
-
-        self.btree.root = node1
-        self.assertTrue(self.btree.search_wide(5))
-        self.assertFalse(self.btree.search_wide(9))
-
-    def test_iter_depth(self):
-        node1 = BinaryNode(1)
-        node2 = BinaryNode(2)
-        node3 = BinaryNode(3)
-        node4 = BinaryNode(4)
-        node5 = BinaryNode(5)
-        node6 = BinaryNode(6)
-        node7 = BinaryNode(7)
-        node8 = BinaryNode(8)
-        node1.insert(node2)
-        node1.insert(node5)
-        node2.insert(node3)
-        node2.insert(node4)
-        node5.insert(node6)
-        node6.insert(node7)
-        node6.insert(node8)
-
-#               1
-#             /   \
-#           2       5
-#         /   \     /
-#       3       4   6
-#                  / \
-#                7    8
-
-        self.btree.root = node1
-        self.assertEquals([int(str(n)) for n in self.btree.iter_depth(self.btree.root)], range(1, 9))
-
-    def test_iter_breadth(self):
-        node1 = BinaryNode(1)
-        node2 = BinaryNode(2)
-        node3 = BinaryNode(3)
-        node4 = BinaryNode(4)
-        node5 = BinaryNode(5)
-        node6 = BinaryNode(6)
-        node7 = BinaryNode(7)
-        node8 = BinaryNode(8)
-        node1.insert(node2)
-        node1.insert(node3)
-        node2.insert(node4)
-        node2.insert(node5)
-        node3.insert(node6)
-        node6.insert(node7)
-        node6.insert(node8)
-
-#               1
-#             /   \
-#           2       3
-#         /   \     /
-#       4       5   6
-#                  / \
-#                7    8
-
-        self.btree.root = node1
-        self.assertEqual([int(str(n)) for n in self.btree.iter_breadth([self.btree.root])], range(1, 9))
-
-    def test_iter_func_binary_tree(self):
-        node1 = BinaryNode(1)
-        node2 = BinaryNode(2)
-        node3 = BinaryNode(3)
-        node4 = BinaryNode(4)
-        node5 = BinaryNode(5)
-        node6 = BinaryNode(6)
-        node7 = BinaryNode(7)
-        node8 = BinaryNode(8)
-        node1.insert(node2)
-        node1.insert(node5)
-        node2.insert(node3)
-        node2.insert(node4)
-        node5.insert(node6)
-        node6.insert(node7)
-        node6.insert(node8)
-        self.btree.root = node1
-
-        self.assertEquals([int(str(n)) for n in self.btree], range(1, 9))
-
-    def test_deep_search(self):
-        node1 = BinaryNode(1)
-        node2 = BinaryNode(2)
-        node3 = BinaryNode(3)
-        node4 = BinaryNode(4)
-        node5 = BinaryNode(5)
-        node6 = BinaryNode(6)
-        node7 = BinaryNode(7)
-        node8 = BinaryNode(8)
-        node1.insert(node2)
-        node1.insert(node5)
-        node2.insert(node3)
-        node2.insert(node4)
-        node5.insert(node6)
-        node6.insert(node7)
-        node6.insert(node8)
-        self.btree.root = node1
-
-        self.assertEqual(self.btree.search_deep(5).value, 5)
-        self.assertFalse(self.btree.search_deep(9))
-
-    def test_wide_search(self):
-        node1 = BinaryNode(1)
-        node2 = BinaryNode(2)
-        node3 = BinaryNode(3)
-        node4 = BinaryNode(4)
-        node5 = BinaryNode(5)
-        node6 = BinaryNode(6)
-        node7 = BinaryNode(7)
-        node8 = BinaryNode(8)
-        node1.insert(node2)
-        node1.insert(node3)
-        node2.insert(node4)
-        node2.insert(node5)
-        node3.insert(node6)
-        node6.insert(node7)
-        node6.insert(node8)
-        self.btree.root = node1
-        self.assertEqual(self.btree.search_deep(5).value, 5)
-        self.assertFalse(self.btree.search_deep(9))
 
 
 

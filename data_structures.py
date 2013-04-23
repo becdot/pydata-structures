@@ -241,77 +241,56 @@ class BinaryTree(object):
         self.root = None
 
     def __iter__(self):
-        gen = self.iter_depth(self.root)
+        "Iterates depthwise through the tree"
+        gen = self.depth_gen(self.root)
         for node in gen:
             yield node
 
-    def iter_depth(self, node):
+    def __contains__(self, value):
+        for node in self:
+            if node.value == value:
+                return True
+        return False
+
+    def depth_gen(self, node):
         if node.empty:
             yield node
         else:
             yield node
             if node.left:
-                left = self.iter_depth(node.left)
+                left = self.depth_gen(node.left)
                 for n in left:
                     yield n
             if node.right:
-                right = self.iter_depth(node.right)
+                right = self.depth_gen(node.right)
                 for n in right:
                     yield n
 
-    def iter_breadth(self, node_list):
+    def breadth_gen(self, node_list):
+        "Just for fun"
         next = []
         for node in node_list:
             yield node
             next.append(node.left) if node.left else None
             next.append(node.right) if node.right else None
         if next:
-            gen = self.iter_breadth(next)
+            gen = self.breadth_gen(next)
             for n in gen:
                 yield n
 
-    def search_deep(self, value):
+    # def search_wide(self, value):
+    #     gen = self.iter_breadth([self.root])
+    #     for node in gen:
+    #         if node.value == value:
+    #             return node
+    #     return None
+
+
+    def insert(self, value, parent_value, child_node=None):
+        new_node = BinaryNode(value)
         for node in self:
-            if node.value == value:
-                return node
-        return None
-
-    def search_wide(self, value):
-        gen = self.iter_breadth([self.root])
-        for node in gen:
-            if node.value == value:
-                return node
-        return None
-
-
-    def depth(self, node, prize):
-        if node.value == prize:
-            return node
-        elif node.empty:
-            return None
-        else:
-            left = self.depth(node.left, prize) if node.left else None
-            right = self.depth(node.right, prize) if node.right else None
-            return left or right
-
-    def breadth(self, nodes, prize):
-        next_level = []
-        for node in nodes:
-            if node.value == prize:
-                return node
-            else:
-                next_level.append(node.left) if node.left else None
-                next_level.append(node.right) if node.right else None
-        if next_level:
-            return self.breadth(next_level, prize)
-        return None
-
-
-    # def insert(self, value, parent_value, child_node=None):
-    #     new_node = BinaryNode(value)
-    #     for node in self:
-    #         if node.value == parent_value:
-    #             node.parent.add_child(node, child_node)
+            if node.value == parent_value:
+                node.parent.add_child(node, child_node)
 
 # Heap
 
