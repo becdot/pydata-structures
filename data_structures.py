@@ -247,12 +247,20 @@ class BinaryTree(object):
             yield node
 
     def __contains__(self, value):
+        "Returns True if value exists in the tree, else returns False"
         for node in self:
             if node.value == value:
                 return True
         return False
 
+    def __getitem__(self, value):
+        "Value is the value of the node, NOT the index"
+        for node in self:
+            if node.value == value:
+                return node
+
     def depth_gen(self, node):
+        "Generates nodes moving depthwise"
         if node.empty:
             yield node
         else:
@@ -278,19 +286,17 @@ class BinaryTree(object):
             for n in gen:
                 yield n
 
-    # def search_wide(self, value):
-    #     gen = self.iter_breadth([self.root])
-    #     for node in gen:
-    #         if node.value == value:
-    #             return node
-    #     return None
-
-
-    def insert(self, value, parent_value, child_node=None):
+    def insert(self, value, parent_value=None, child_value=None):
+        """Inserts the value between the parent node and the child node
+            If child node does not exist, tries to add the node as a leaf to the parent"""
         new_node = BinaryNode(value)
-        for node in self:
-            if node.value == parent_value:
-                node.parent.add_child(node, child_node)
+        child_node = self[child_value] if child_value else None
+        if parent_value:
+            for node in self:
+                if node.value == parent_value:
+                    node.insert(new_node, child_node)
+        else:
+            self.root = BinaryNode(value)
 
 # Heap
 

@@ -330,8 +330,33 @@ class TestDataStructures(unittest.TestCase):
         self.assertFalse(9 in tree)
 
     def test_insert_into_binary_tree(self):
-        pass
-
+        ## note - indexing grabs the node with that VALUE, not the node that exists at that index
+        #       1
+        self.btree.insert(1)
+        self.assertTrue(test_binary_node(self.btree[1], 1, None, None, None))
+        self.btree.insert(4, 1)
+        #       1
+        #      /
+        #     4
+        self.assertTrue(test_binary_node(self.btree[1], 1, 4, None, None))
+        self.assertTrue(test_binary_node(self.btree[4], 4, None, None, 1))
+        self.btree.insert(3, 1)
+        #       1
+        #      / \
+        #     4   3
+        self.assertTrue(test_binary_node(self.btree[1], 1, 4, 3, None))
+        self.assertTrue(test_binary_node(self.btree[4], 4, None, None, 1))
+        self.assertTrue(test_binary_node(self.btree[3], 3, None, None, 1))
+        self.btree.insert(2, 1, 4)
+        #       1
+        #      / \
+        #     2   3
+        #    /
+        #   4
+        self.assertTrue(test_binary_node(self.btree[1], 1, 2, 3, None))
+        self.assertTrue(test_binary_node(self.btree[2], 2, 4, None, 1))
+        self.assertTrue(test_binary_node(self.btree[3], 3, None, None, 1))
+        self.assertTrue(test_binary_node(self.btree[4], 4, None, None, 2))
 
 
 
