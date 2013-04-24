@@ -1,3 +1,5 @@
+import random
+
 class Stack(object):
     """First-in, last-out data structure.
         Elements can be pushed onto or popped off the stack; can also peek at the top element."""
@@ -268,6 +270,13 @@ class BinaryTree(object):
             if node.value == value:
                 return node
 
+    def __eq__(self, other):
+        return self.value == other.value
+
+    def __ne__(self):
+        return self.value != other.value
+
+
     def depth_gen(self, node):
         "Generates nodes moving depthwise"
         if node.empty:
@@ -319,7 +328,7 @@ class BinarySearchNode(BinaryNode):
         if node:
             return node
         else:
-            raise AttributeError("{} does not exist in {}".format(value, self))
+            raise AttributeError("{} does not exist".format(value))
 
     def search(self, value):
         if self.value == value:
@@ -342,6 +351,47 @@ class BinarySearchNode(BinaryNode):
         else:
             self.left = BinarySearchNode(value)
             self.left.parent = self
+
+    def delete(self, successor=None):
+        # successor is only used for testing purposes, to prevent the successor from being chosen randomly
+        if not(self.left and self.right):
+            self.parent.left = self.left if self.parent.left == self else self.parent.left
+            self.parent.right = self.right if self.parent.right == self else self.parent.right
+            if self.left:
+                self.left.parent = self.parent
+            if self.right:
+                self.right.parent = self.parent
+        else:
+            successor = successor or random.choice([self.left, self.right])
+            successor.parent = self.parent
+            if successor.parent.left == self:
+                successor.parent.left = successor
+            else:
+                successor.parent.right = successor
+            if successor == self.right:
+                ext_left = successor
+                while ext_left.left:
+                    ext_left = ext_left.left
+                ext_left.left = self.left
+                self.left.parent = ext_left
+            else:
+                ext_right = successor
+                while ext_right.right:
+                    ext_right = ext_right.right
+                ext_right.right = self.right
+                self.right.parent = ext_right
+
+
+    def remove(self, value, successor=None):
+        # successor is only used for testing purposes, to prevent the successor from being chosen randomly
+        if self.value == value:
+            self.delete(successor)
+        elif self.right and value >= self.value:
+            return self.right.remove(value, successor)
+        elif self.left and value <= self.value:
+            return self.left.remove(value, successor)
+        else:
+            raise AttributeError("{} does not exist".format(value))
 
 
 

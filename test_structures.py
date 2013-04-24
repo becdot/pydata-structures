@@ -94,8 +94,6 @@ def binary_search_tree():
     return node5
 
 
-
-
 class TestDataStructures(unittest.TestCase):
 
     def setUp(self):
@@ -420,6 +418,64 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(root[2], 2, None, None, 3))
         self.assertTrue(test_binary_node(root[4], 4, None, None, 3))
         self.assertTrue(test_binary_node(root[6], 6, None, None, 8))
+
+    # def test_binary_search_remove_external_node(self):
+    #     root = binary_search_tree()
+    #     root.remove(1)
+    #     self.assertTrue(test_binary_node(root, 5, 3, 8, None))
+    #     self.assertTrue(test_binary_node(root[3], 3, 2, 4, 5))
+    #     self.assertTrue(test_binary_node(root[8], 8, 6, None, 5))
+    #     self.assertTrue(test_binary_node(root[2], 2, None, None, 3))
+    #     self.assertTrue(test_binary_node(root[4], 4, None, None, 3))
+    #     self.assertTrue(test_binary_node(root[6], 6, None, 7, 8))
+    #     self.assertTrue(test_binary_node(root[7], 7, None, None, 6))
+    #     self.assertFalse(1 in root)
+    #     self.assertFalse(root.search(1))
+
+    def test_binary_search_remove_internal_node_without_children(self):
+        root = binary_search_tree()
+        root.remove(3, root[4])
+        self.assertTrue(test_binary_node(root, 5, 4, 8, None))
+        self.assertTrue(test_binary_node(root[4], 4, 2, None, 5))
+        self.assertTrue(test_binary_node(root[8], 8, 6, None, 5))
+        self.assertTrue(test_binary_node(root[2], 2, 1, None, 4))
+        self.assertTrue(test_binary_node(root[6], 6, None, 7, 8))
+        self.assertTrue(test_binary_node(root[7], 7, None, None, 6))
+        self.assertFalse(3 in root)
+
+    def test_binary_search_remove_internal_node_with_children1(self):
+        root = binary_search_tree()
+        root.insert(3.5)
+        root.insert(4.5)
+        root.remove(3, root[4])
+
+        self.assertTrue(test_binary_node(root, 5, 4, 8, None))
+        self.assertTrue(test_binary_node(root[4], 4, 3.5, 4.5, 5))
+        self.assertTrue(test_binary_node(root[8], 8, 6, None, 5))
+        self.assertTrue(test_binary_node(root[2], 2, 1, None, 3.5))
+        self.assertTrue(test_binary_node(root[6], 6, None, 7, 8))
+        self.assertTrue(test_binary_node(root[1], 1, None, None, 2))
+        self.assertTrue(test_binary_node(root[3.5], 3.5, 2, None, 4))
+        self.assertTrue(test_binary_node(root[4.5], 4.5, None, None, 4))
+        self.assertTrue(test_binary_node(root[7], 7, None, None, 6))
+        self.assertFalse(3 in root)
+
+    def test_binary_search_remove_internal_node_with_children2(self):
+        root = binary_search_tree()
+        root.insert(3.5)
+        root.insert(4.5)
+        root.remove(3, root[2])
+
+        self.assertTrue(test_binary_node(root, 5, 2, 8, None))
+        self.assertTrue(test_binary_node(root[2], 2, 1, 4, 5))
+        self.assertTrue(test_binary_node(root[8], 8, 6, None, 5))
+        self.assertTrue(test_binary_node(root[6], 6, None, 7, 8))
+        self.assertTrue(test_binary_node(root[1], 1, None, None, 2))
+        self.assertTrue(test_binary_node(root[4], 4, 3.5, 4.5, 2))
+        self.assertTrue(test_binary_node(root[3.5], 3.5, None, None, 4))
+        self.assertTrue(test_binary_node(root[4.5], 4.5, None, None, 4))
+        self.assertTrue(test_binary_node(root[7], 7, None, None, 6))
+        self.assertFalse(3 in root)
 
 
 
