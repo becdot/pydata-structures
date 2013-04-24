@@ -364,10 +364,8 @@ class BinarySearchNode(BinaryNode):
         else:
             successor = successor or random.choice([self.left, self.right])
             successor.parent = self.parent
-            if successor.parent.left == self:
-                successor.parent.left = successor
-            else:
-                successor.parent.right = successor
+            successor.parent.left = successor if successor.parent.left == self else successor.parent.left
+            successor.parent.right = successor if successor.parent.right == self else successor.parent.right
             if successor == self.right:
                 ext_left = successor
                 while ext_left.left:
@@ -380,7 +378,7 @@ class BinarySearchNode(BinaryNode):
                     ext_right = ext_right.right
                 ext_right.right = self.right
                 self.right.parent = ext_right
-
+        del self
 
     def remove(self, value, successor=None):
         # successor is only used for testing purposes, to prevent the successor from being chosen randomly
