@@ -314,6 +314,13 @@ class BinarySearchNode(BinaryNode):
             return True
         return False
 
+    def __getitem__(self, value):
+        node = self.search(value)
+        if node:
+            return node
+        else:
+            raise AttributeError("{} does not exist in {}".format(value, self))
+
     def search(self, value):
         if self.value == value:
             return self
