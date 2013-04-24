@@ -331,6 +331,7 @@ class BinarySearchNode(BinaryNode):
             raise AttributeError("{} does not exist".format(value))
 
     def search(self, value):
+        "Traverses the tree -- average time of log(n)"
         if self.value == value:
             return self
         elif value > self.value:
@@ -339,6 +340,7 @@ class BinarySearchNode(BinaryNode):
             return self.left.search(value) if self.left else None
 
     def insert(self, value):
+        "Inserts a node with value in the appropriate place.  Cannot have duplicate nodes."
         if self.value == value:
             raise IndexError("{} already exists".format(value))
         elif self.right and value > self.value:
@@ -352,20 +354,27 @@ class BinarySearchNode(BinaryNode):
             self.left = BinarySearchNode(value)
             self.left.parent = self
 
-    def delete(self, successor=None):
+    def _delete(self, successor=None):
+        "Delete node by updating its parent and child/ren -- should not be called directly"
         # successor is only used for testing purposes, to prevent the successor from being chosen randomly
         if not(self.left and self.right):
+            # if node has one or fewer children, deletion is easy
+            # update parent to point to our child, if it exists
             self.parent.left = self.left if self.parent.left == self else self.parent.left
             self.parent.right = self.right if self.parent.right == self else self.parent.right
+            # update our child, if it exists, to point to our parent
             if self.left:
                 self.left.parent = self.parent
             if self.right:
                 self.right.parent = self.parent
         else:
+            # if node has two children, have to choose which child replaces it
             successor = successor or random.choice([self.left, self.right])
+            # update parent to point to successor
             successor.parent = self.parent
             successor.parent.left = successor if successor.parent.left == self else successor.parent.left
             successor.parent.right = successor if successor.parent.right == self else successor.parent.right
+            # move our children to be children of successor (or of successor's children)
             if successor == self.right:
                 ext_left = successor
                 while ext_left.left:
@@ -381,24 +390,15 @@ class BinarySearchNode(BinaryNode):
         del self
 
     def remove(self, value, successor=None):
-        # successor is only used for testing purposes, to prevent the successor from being chosen randomly
+        "Removes the node with value. Successor is for testing purposes, since delete chooses the successor randomly"
         if self.value == value:
-            self.delete(successor)
+            self._delete(successor)
         elif self.right and value >= self.value:
             return self.right.remove(value, successor)
         elif self.left and value <= self.value:
             return self.left.remove(value, successor)
         else:
             raise AttributeError("{} does not exist".format(value))
-
-
-
-class BinarySearchTree(object):
-
-    def __init__(self):
-        self.root = None
-
-
 
 
 # Heap
