@@ -1,7 +1,7 @@
 import unittest
 
 from data_structures import Stack, Queue, Node, SinglyLinkedList, DoublyLinkedList, BinaryNode, BinaryTree
-from data_structures import BinarySearchNode
+from data_structures import BinarySearchNode, HeapNode, Heap
 
 def test_node(node, value, next, prev):
     return (node.value == value) and (node.next == next if node.next == None else node.next.value == next
@@ -92,6 +92,22 @@ def binary_search_tree():
     node5.insert(7)
 
     return node5
+
+def max_heap():
+    node17 = HeapNode(17)
+    node15 = HeapNode(15)
+    node10 = HeapNode(10)
+    node6 = HeapNode(6)
+    node10 = HeapNode(10)
+    node7 = HeapNode(7)
+
+    node17.left = node15
+    node17.right = node10
+    node15.left = node6
+    node15.right = HeapNode(10)
+    node10.left = node7
+    return node17
+
 
 
 class TestDataStructures(unittest.TestCase):
@@ -476,6 +492,17 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(root[4.5], 4.5, None, None, 4))
         self.assertTrue(test_binary_node(root[7], 7, None, None, 6))
         self.assertFalse(3 in root)
+
+    # HEAP
+    def test_heap_iteration(self):
+        heap = Heap(max_heap())
+        self.assertEqual([int(str(n)) for n in heap.breadth()], [17, 15, 10, 6, 10, 7])
+        self.assertEqual([int(str(n)) for n in heap], [17, 15, 10, 6, 10, 7])
+        self.assertEqual(heap.flatten(), [17, 15, 10, 6, 10, 7])
+
+    def test_build_heap_from_array(self):
+        pass
+
 
 
 
