@@ -551,8 +551,34 @@ class TestDataStructures(unittest.TestCase):
         self.assertEqual(heap.last.value, 5)
         self.assertEqual(heap.find_last(), (node6, 'left'))
 
-
-
+    def test_insert(self):
+        node17 = HeapNode(17)
+        heap = Heap(node17)
+        heap.insert(15)
+        self.assertTrue(test_binary_node(heap.root, 17, 15, None, None))
+        self.assertTrue(test_binary_node(heap.root.left, 15, None, None, 17))
+        heap.insert(10)
+        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+        self.assertTrue(test_binary_node(heap.root.left, 15, None, None, 17))        
+        self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
+        heap.insert(6)
+        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+        self.assertTrue(test_binary_node(heap.root.left, 15, 6, None, 17))        
+        self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
+        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+        heap.insert(10)
+        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+        self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17))        
+        self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
+        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
+        heap.insert(7)
+        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+        self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17))        
+        self.assertTrue(test_binary_node(heap.root.right, 10, 7, None, 17))
+        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 10))
 
 
 

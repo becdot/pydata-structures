@@ -404,13 +404,13 @@ class BinarySearchNode(BinaryNode):
 
 # Heap
 class HeapNode(BinaryNode):
-    
+    pass    
     # can have duplicates in a heap
-    def __eq__(self, other):
-        return self == other
+    # def __eq__(self, other):
+    #     return self == other
 
-    def __ne__(self, other):
-        return self == other
+    # def __ne__(self, other):
+    #     return self == other
 
     # @staticmethod
     # def breadth(children):
@@ -475,9 +475,11 @@ class Heap(object):
                 return (node, 'left')
 
 
-
-
-
+    def insert(self, value):
+        node = HeapNode(value)
+        parent, place = self.find_last()
+        node.parent = parent
+        setattr(parent, place, node)
 
 
 # (Hash table, Trie)
