@@ -500,9 +500,56 @@ class TestDataStructures(unittest.TestCase):
         self.assertEqual([int(str(n)) for n in heap], [17, 15, 10, 6, 10, 7])
         self.assertEqual(heap.flatten(), [17, 15, 10, 6, 10, 7])
 
-    def test_build_heap_from_array(self):
-        pass
+    def test_find_last_with_empty_aunt(self):
+        node17 = HeapNode(17)
+        node15 = HeapNode(15)
+        node11 = HeapNode(11)
+        node6 = HeapNode(6)
+        node10 = HeapNode(10)
+        node17.left = node15
+        node17.right = node11
+        node15.left = node6
+        node15.right = HeapNode(10)
 
+        heap = Heap(node17)
+        self.assertEqual(heap.last.value, 10)
+        self.assertEqual(heap.find_last(), (node11, 'left'))
+
+    def test_find_last_with_single_child_aunt(self):
+        node17 = HeapNode(17)
+        node15 = HeapNode(15)
+        node11 = HeapNode(11)
+        node6 = HeapNode(6)
+        node10 = HeapNode(10)
+        node7 = HeapNode(7)
+        node17.left = node15
+        node17.right = node11
+        node15.left = node6
+        node15.right = HeapNode(10)
+        node11.left = node7
+
+        heap = Heap(node17)
+        self.assertEqual(heap.last.value, 7)
+        self.assertEqual(heap.find_last(), (node11, 'right'))
+
+    def test_find_last_with_non_empty_aunt(self):
+        node17 = HeapNode(17)
+        node15 = HeapNode(15)
+        node11 = HeapNode(11)
+        node6 = HeapNode(6)
+        node10 = HeapNode(10)
+        node7 = HeapNode(7)
+        node5 = HeapNode(5)
+        node17.left = node15
+        node17.right = node11
+        node15.left = node6
+        node15.right = HeapNode(10)
+        node11.left = node7
+        node11.right = node5
+        
+        heap = Heap(node17)
+        self.assertEqual(heap.last.value, 5)
+        self.assertEqual(heap.find_last(), (node6, 'left'))
 
 
 

@@ -404,7 +404,13 @@ class BinarySearchNode(BinaryNode):
 
 # Heap
 class HeapNode(BinaryNode):
-    pass
+    
+    # can have duplicates in a heap
+    def __eq__(self, other):
+        return self == other
+
+    def __ne__(self, other):
+        return self == other
 
     # @staticmethod
     # def breadth(children):
@@ -436,12 +442,17 @@ class Heap(object):
     def __init__(self, root=None, array=None):
         if array:
             self.build_from_array(array)
-        self.root = root
-        self.last = [n for n in self][-1]
+
+        else:
+            self.root = root
+            self.last = [n for n in self][-1]
 
     def __iter__(self):
         for node in self.breadth():
             yield node
+
+    def flatten(self):
+        return [int(str(n)) for n in self]
 
     def breadth(self, children=None):
         children = [self.root] if children == None else children
@@ -454,19 +465,15 @@ class Heap(object):
             for n in self.breadth(next):
                 yield n
 
-    def flatten(self):
-        return [int(str(n)) for n in self]
+    def find_last(self):
+        for node in self:
+            if node.right:
+                continue
+            elif node.left:
+                return (node, 'right')
+            else:
+                return (node, 'left')
 
-    def build_from_array(self, arr):
-        length = len(arr)
-        for i, val in enumerate(arr):
-            val = HeapNode(val)
-            val.left = arr[2 * i + 1] if 2 * i + 1 < length else None
-            print "{}.left = {}".format(val, val.left)
-            val.right = 2 * i + 2if 2 * i + 2 < length else None
-            print "{}.right = {}".format(val, val.right)
-            val.parent = None if i == 0 else math.floor(i/2.0)
-            print "{}.parent = {}".format(val, val.parent)
 
 
 
