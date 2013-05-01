@@ -522,9 +522,7 @@ class TestDataStructures(unittest.TestCase):
         node15.right = HeapNode(10)
 
         heap = Heap(node17)
-        for node in heap:
-            pass
-        self.assertEqual(node.value, 10)
+        self.assertEqual(heap[-1].value, 10)
         self.assertEqual(heap.find_open(), (node11, 'left'))
 
     def test_find_open_with_single_child_aunt(self):
@@ -541,9 +539,7 @@ class TestDataStructures(unittest.TestCase):
         node11.left = node7
 
         heap = Heap(node17)
-        for node in heap:
-            pass
-        self.assertEqual(node.value, 7)
+        self.assertEqual(heap[-1].value, 7)
         self.assertEqual(heap.find_open(), (node11, 'right'))
 
     def test_find_open_with_non_empty_aunt(self):
@@ -562,9 +558,7 @@ class TestDataStructures(unittest.TestCase):
         node11.right = node5
         
         heap = Heap(node17)
-        for node in heap:
-            pass
-        self.assertEqual(node.value, 5)
+        self.assertEqual(heap[-1].value, 5)
         self.assertEqual(heap.find_open(), (node6, 'left'))
 
     def test_insert(self):
@@ -596,7 +590,7 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
         self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 10))
 
-    def test_percolate(self):
+    def test_bubble(self):
 
         #               17                      17                  100
         #             /    \                  /    \               /    \
@@ -609,7 +603,7 @@ class TestDataStructures(unittest.TestCase):
         last = HeapNode(100)
         parent.right = last
         last.parent = parent
-        heap.percolate(last)
+        heap.bubble(last)
 
         self.assertTrue(test_binary_node(heap.root, 100, 15, 17, None))
         self.assertTrue(test_binary_node(heap.root.right, 17, 7, 10, 100))
@@ -628,7 +622,7 @@ class TestDataStructures(unittest.TestCase):
         last = HeapNode(99)
         last.parent = parent
         parent.left = last
-        heap.percolate(last)
+        heap.bubble(last)
         self.assertTrue(test_binary_node(heap.root, 100, 99, 17, None))
         self.assertTrue(test_binary_node(heap.root.left, 99, 15, 10, 100))
         self.assertTrue(test_binary_node(heap.root.left.left, 15, 6, None, 99))
@@ -652,7 +646,7 @@ class TestDataStructures(unittest.TestCase):
         last = HeapNode(100)
         ten.left = last
         last.parent = ten
-        heap.percolate(last)
+        heap.bubble(last)
         self.assertTrue(test_binary_node(heap.root, 100, 100, 17, None))
         self.assertTrue(test_binary_node(heap.root.left, 100, 15, 99, 100))
         self.assertTrue(test_binary_node(heap.root.left.left, 15, 6, 12, 100))
@@ -722,7 +716,6 @@ class TestDataStructures(unittest.TestCase):
         heap1 = [17, 15, 11, 6, 10, 7]
         heap2 = [6, 10, 7, 15, 17, 11]
         heap = Heap(array=heap1)
-        print heap.flatten()
         self.assertTrue(test_binary_node(heap.root, 17, 15, 11, None))
         self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17)) 
         self.assertTrue(test_binary_node(heap.root.right, 11, 7, None, 17))
@@ -737,8 +730,54 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
         self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 11)) 
 
+    def test_delete(self):
 
-
+        #          17                  7                  15                  15          
+        #        /    \              /    \              /    \              /    \    
+        #     15        11  -->   15        11  -->   7        11   -->   10        11
+        #    /  \      /         /  \                /  \                /  \        
+        #  6     10   7        6     10            6     10            6     7       
+        heap = Heap(max_heap())
+        heap[2].value = 11
+        heap.delete_root()
+        self.assertTrue(test_binary_node(heap.root, 15, 10, 11, None))
+        self.assertTrue(test_binary_node(heap.root.left, 10, 6, 7, 15)) 
+        self.assertTrue(test_binary_node(heap.root.right, 11, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 10))
+        self.assertTrue(test_binary_node(heap.root.left.right, 7, None, None, 10))
+        #         15                  7                  11    
+        #       /    \              /    \             /    \  
+        #     10      11  -->    10       11  -->   10       7
+        #    /  \               /                  /           
+        #  6     7            6                  6             
+        heap.delete_root()
+        self.assertTrue(test_binary_node(heap.root, 11, 10, 7, None))
+        self.assertTrue(test_binary_node(heap.root.left, 10, 6, None, 11)) 
+        self.assertTrue(test_binary_node(heap.root.right, 7, None, None, 11))
+        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 10))
+        #          11               6                 10           
+        #        /    \           /    \            /    \        
+        #     10       7  -->   10      7   -->   6       7
+        #    /                                                      
+        #  6                                                       
+        heap.delete_root()
+        self.assertTrue(test_binary_node(heap.root, 10, 6, 7, None))
+        self.assertTrue(test_binary_node(heap.root.left, 6, None, None, 10)) 
+        self.assertTrue(test_binary_node(heap.root.right, 7, None, None, 10))
+        #      10             7        
+        #    /    \  -->    /       
+        #  6       7      6     
+        heap.delete_root()
+        self.assertTrue(test_binary_node(heap.root, 7, 6, None, None))
+        self.assertTrue(test_binary_node(heap.root.left, 6, None, None, 7)) 
+        #      7                
+        #    /   -->   6
+        #  6             
+        heap.delete_root()
+        self.assertTrue(test_binary_node(heap.root, 6, None, None, None))
+        #   6   -->  None
+        heap.delete_root()
+        self.assertFalse(heap.root)
 
 
 

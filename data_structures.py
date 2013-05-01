@@ -461,6 +461,24 @@ class Heap(object):
         for node in self.breadth():
             yield node
 
+    def __len__(self):
+        "Number of nodes"
+        return sum(1 for node in self)
+
+    def __getitem__(self, index):
+        "Supports positive and negative indexing -- does not support slicing"
+        if index >= 0:
+            for i, node in enumerate(self):
+                if i == index:
+                    return node
+        elif index < 0:
+            for i, node in enumerate(reversed(self)):
+                if (-i - 1) == index:
+                    return node
+        else:
+            raise IndexError
+
+
     def flatten(self):
         "Returns a list of node values, in heap order"
         return [int(str(n)) for n in self]
@@ -490,15 +508,15 @@ class Heap(object):
 
     def insert(self, value):
         """Inserts a node with value in the next open position, 
-        and percolates it upwards if necessary to preserve heapifiedness"""
+        and bubbles it upwards if necessary to preserve heapifiedness"""
         node = HeapNode(value)
         parent, place = self.find_open()
         node.parent = parent
         setattr(parent, place, node)
-        self.percolate(node)
+        self.bubble(node)
 
     def swap_parent(self, node):
-        "Given a node, updates all necessary pointers to swap the node with its parent"
+        "Given a node, updates all necessary pointers to swap the node with its parent, and returns the node"
         # make sure the node needs to be swapped
         if node.parent == None or node <= node.parent:
             return node
@@ -532,26 +550,49 @@ class Heap(object):
             old_left.parent = old_parent
         if old_right:
             old_right.parent = old_parent
-        # finally, if node has percolated to the top of the heap, update self.root
+        # finally, if node has bubbled to the top of the heap, update self.root
         if node.parent == None:
             self.root = node
         return node
 
-    def percolate(self, node):
+    def bubble(self, node):
         "Bubbles a node upwards until it reaches heapifiedness"
         while node.parent and node > node.parent:
             node = self.swap_parent(node)
 
     def heapify(self, arr):
+        "Builds a heap from a list"
         self.root = HeapNode(arr[0])
         for val in arr[1:]:
             self.insert(val)
 
+    def delete_root(self):
+        """Deletes the root node, replaces it with the last element, 
+            and bubbles it down until heapifiedness is achieved"""
+        # if there is only a root node, delete it
+        if len(self) == 1:
+            del self.root
+            self.root = None
+            return
+        # otherwise, replace the node at the top of the heap with the last element
+        last = self[-1]
+        # remove old references to last
+        last.parent.right = None if last.parent.right is last else last.parent.right
+        last.parent.left = None if last.parent.left is last else last.parent.left
+        last.parent = None
+        # attach root's old children to last
+        last.left, last.right = self.root.left, self.root.right
+        if last.left:
+            last.left.parent = last
+        if last.right:
+            last.right.parent = last
+        # update self.root
+        del self.root
+        self.root = last
 
-
-
-
-
-
-
-# (Hash table, Trie)
+        # while last is smaller than its children, swap it with the largest of its children
+        # until heapifiedness is achieved
+        while last < last.right or last < last.left:
+            to_swap = last.left if last.left > last.right else last.right
+            new_parent = self.swap_parent(to_swap)
+            last = new_parent.right if new_parent.right is last else new_parent.left
