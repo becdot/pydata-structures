@@ -458,13 +458,16 @@ class Heap(object):
             self.root = root
 
     def __iter__(self):
+        "Uses breadth-first iteration to iterate through the nodes"
         for node in self.breadth():
             yield node
 
     def flatten(self):
+        "Returns a list of node values, in heap order"
         return [int(str(n)) for n in self]
 
     def breadth(self, children=None):
+        "Generates nodes in a breadth-first fashion"
         children = [self.root] if children == None else children
         next = []
         for node in children:
@@ -476,6 +479,8 @@ class Heap(object):
                 yield n
 
     def find_open(self):
+        """Finds the next open position for insertion
+            Returns a tuple of (parent_node, which_child_to_insert)"""
         for node in self:
             if node.right:
                 continue
@@ -485,6 +490,8 @@ class Heap(object):
                 return (node, 'left')
 
     def insert(self, value):
+        """Inserts a node with value in the next open position, 
+        and percolates it upwards if necessary to preserve heapifiedness"""
         node = HeapNode(value)
         parent, place = self.find_open()
         node.parent = parent
@@ -492,6 +499,7 @@ class Heap(object):
         self.percolate(node)
 
     def swap_parent(self, node):
+        "Given a node, updates all necessary pointers to swap the node with its parent"
         # make sure the node needs to be swapped
         if node.parent == None or node <= node.parent:
             return node
@@ -531,6 +539,7 @@ class Heap(object):
         return node
 
     def percolate(self, node):
+        "Bubbles a node upwards until it reaches heapifiedness"
         while node.parent and node > node.parent:
             node = self.swap_parent(node)
 
