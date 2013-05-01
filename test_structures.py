@@ -94,6 +94,13 @@ def binary_search_tree():
     return node5
 
 def max_heap():
+
+#               17
+#             /    \
+#          15        10
+#         /  \      /
+#       6     10   7
+
     node17 = HeapNode(17)
     node15 = HeapNode(15)
     node10 = HeapNode(10)
@@ -103,9 +110,12 @@ def max_heap():
 
     node17.left = node15
     node17.right = node10
+    node15.parent, node10.parent = node17, node17
     node15.left = node6
     node15.right = HeapNode(10)
+    node6.parent, node15.right.parent = node15, node15
     node10.left = node7
+    node7.parent = node10
     return node17
 
 
@@ -551,34 +561,99 @@ class TestDataStructures(unittest.TestCase):
         self.assertEqual(heap.last.value, 5)
         self.assertEqual(heap.find_last(), (node6, 'left'))
 
-    def test_insert(self):
-        node17 = HeapNode(17)
-        heap = Heap(node17)
-        heap.insert(15)
-        self.assertTrue(test_binary_node(heap.root, 17, 15, None, None))
-        self.assertTrue(test_binary_node(heap.root.left, 15, None, None, 17))
-        heap.insert(10)
-        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
-        self.assertTrue(test_binary_node(heap.root.left, 15, None, None, 17))        
-        self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
-        heap.insert(6)
-        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
-        self.assertTrue(test_binary_node(heap.root.left, 15, 6, None, 17))        
-        self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
-        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
-        heap.insert(10)
-        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
-        self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17))        
-        self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
-        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
-        self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
-        heap.insert(7)
-        self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
-        self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17))        
-        self.assertTrue(test_binary_node(heap.root.right, 10, 7, None, 17))
-        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
-        self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
-        self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 10))
+    # def test_insert(self):
+    #     node17 = HeapNode(17)
+    #     heap = Heap(node17)
+    #     heap.insert(15)
+    #     self.assertTrue(test_binary_node(heap.root, 17, 15, None, None))
+    #     self.assertTrue(test_binary_node(heap.root.left, 15, None, None, 17))
+    #     heap.insert(10)
+    #     self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+    #     self.assertTrue(test_binary_node(heap.root.left, 15, None, None, 17))        
+    #     self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
+    #     heap.insert(6)
+    #     self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+    #     self.assertTrue(test_binary_node(heap.root.left, 15, 6, None, 17))        
+    #     self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
+    #     self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+    #     heap.insert(10)
+    #     self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+    #     self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17))        
+    #     self.assertTrue(test_binary_node(heap.root.right, 10, None, None, 17))
+    #     self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+    #     self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
+    #     heap.insert(7)
+    #     self.assertTrue(test_binary_node(heap.root, 17, 15, 10, None))
+    #     self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17))        
+    #     self.assertTrue(test_binary_node(heap.root.right, 10, 7, None, 17))
+    #     self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+    #     self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
+    #     self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 10))
+
+    def test_percolate(self):
+
+#               17                      17                  100
+#             /    \                  /    \               /    \
+#          15        10    -->     15       100    -->   15       17
+#         /  \      /  \          /  \      /  \        /  \     /  \
+#       6     10   7   100      6     10   7   10     6     10  7   10
+
+        heap = Heap(max_heap())
+        parent = heap.root.right
+        last = HeapNode(100)
+        parent.right = last
+        last.parent = parent
+        heap.percolate(last)
+
+        self.assertTrue(test_binary_node(heap.root, 100, 15, 17, None))
+        self.assertTrue(test_binary_node(heap.root.right, 17, 7, 10, 100))
+        self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 17))
+        self.assertTrue(test_binary_node(heap.root.right.right, 10, None, None, 17))
+
+#             100                  100                  100
+#            /    \               /    \               /    \
+#          15       17   -->    15       17    -->  99       17
+#         /  \     /  \        /  \     /  \        /  \     /  \
+#       6     10  7   10     99   10  7   10     15     10  7   10
+#      /                     /                   /
+#     99                   6                   6
+
+        parent = heap.root.left.left
+        last = HeapNode(99)
+        last.parent = parent
+        parent.left = last
+        heap.percolate(last)
+        self.assertTrue(test_binary_node(heap.root, 100, 99, 17, None))
+        self.assertTrue(test_binary_node(heap.root.left, 99, 15, 10, 100))
+        self.assertTrue(test_binary_node(heap.root.left.left, 15, 6, None, 99))
+        self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 99))
+        self.assertTrue(test_binary_node(heap.root.left.left.left, 6, None, None, 15))
+
+#             100                  100                  100
+#            /    \               /    \               /    \
+#          99       17   -->    99       17    -->  100       17
+#         /  \     /  \        /  \     /  \        /  \      /  \
+#       15    10  7   10     15  100  7   10     15    99   7   10
+#      /  \   /             / \   /              /  \   /
+#     6   12 100          6  12 10             6   12 10
+
+        fifteen = heap.root.left.left
+        twelve = HeapNode(12)
+        twelve.parent = fifteen
+        fifteen.right = twelve
+
+        ten = heap.root.left.right
+        last = HeapNode(100)
+        ten.left = last
+        last.parent = ten
+        heap.percolate(last)
+        self.assertTrue(test_binary_node(heap.root, 100, 100, 17, None))
+        self.assertTrue(test_binary_node(heap.root.left, 100, 15, 99, 100))
+        self.assertTrue(test_binary_node(heap.root.left.left, 15, 6, 12, 100))
+        self.assertTrue(test_binary_node(heap.root.left.right, 99, 10, None, 100))
+
+
+
 
 
 

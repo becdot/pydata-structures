@@ -213,8 +213,19 @@ class BinaryNode(object):
     def __eq__(self, other):
         return self.value == other.value if isinstance(other, BinaryNode) else False
 
-    def __ne__(self):
+    def __ne__(self, other):
         return self.value != other.value if isinstance(other, BinaryNode) else True 
+
+    def __ge__(self, other):
+        return self.value >= other.value if isinstance(other, BinaryNode) else False 
+
+    def __gt__(self, other):
+        return self.value > other.value if isinstance(other, BinaryNode) else False 
+    def __le__(self, other):
+        return self.value <= other.value if isinstance(other, BinaryNode) else False 
+
+    def __lt__(self, other):
+        return self.value < other.value if isinstance(other, BinaryNode) else False 
 
     @property
     def empty(self):
@@ -474,12 +485,65 @@ class Heap(object):
             else:
                 return (node, 'left')
 
-
     def insert(self, value):
         node = HeapNode(value)
         parent, place = self.find_last()
         node.parent = parent
         setattr(parent, place, node)
+        self.percolate(node)
+        self.last = node
+
+    def swap_parent(self, node):
+        # make sure the node needs to be swapped
+        if node.parent == None or node <= node.parent:
+            return node
+        old_parent = node.parent
+        grandparent = old_parent.parent
+        old_left = node.left
+        old_right = node.right
+        # attach node to its grandparent (new parent)
+        node.parent = grandparent
+        if grandparent and grandparent.right is old_parent:
+            grandparent.right = node
+        elif grandparent and grandparent.left is old_parent:
+            grandparent.left = node
+        # add old parent as a child of node
+        old_parent.parent = node
+        if old_parent.left is node:
+            node.left = old_parent
+        else:
+            node.right = old_parent
+        # if node had a sibling, add it as a child of node
+        if old_parent.right is node and old_parent.left:
+            node.left = old_parent.left
+            old_parent.left.parent = node
+        elif old_parent.left is node and old_parent.right:
+            node.right = old_parent.right
+            old_parent.right.parent = node
+        # add any of node's old children as the children of the swapped (old parent) node 
+        old_parent.left = old_left
+        old_parent.right = old_right
+        if old_left:
+            old_left.parent = old_parent
+        if old_right:
+            old_right.parent = old_parent
+        # finally, if node has percolated to the top of the heap, update self.root
+        # (self.last will get updated in insert())
+        if node.parent == None:
+            self.root = node
+        return node
+
+    def percolate(self, node):
+        while node.parent and node > node.parent:
+            node = self.swap_parent(node)
+
+    # def build_from_array(self, arr):
+    #     pass
+
+
+
+
+
 
 
 # (Hash table, Trie)
