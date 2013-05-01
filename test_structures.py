@@ -718,6 +718,24 @@ class TestDataStructures(unittest.TestCase):
         self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
         self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 11))
 
+    def test_build_from_array(self):
+        heap1 = [17, 15, 11, 6, 10, 7]
+        heap2 = [6, 10, 7, 15, 17, 11]
+        heap = Heap(array=heap1)
+        print heap.flatten()
+        self.assertTrue(test_binary_node(heap.root, 17, 15, 11, None))
+        self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17)) 
+        self.assertTrue(test_binary_node(heap.root.right, 11, 7, None, 17))
+        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 11)) 
+        heap = Heap(array=heap2)
+        self.assertTrue(test_binary_node(heap.root, 17, 15, 11, None))
+        self.assertTrue(test_binary_node(heap.root.left, 15, 6, 10, 17)) 
+        self.assertTrue(test_binary_node(heap.root.right, 11, 7, None, 17))
+        self.assertTrue(test_binary_node(heap.root.left.left, 6, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.left.right, 10, None, None, 15))
+        self.assertTrue(test_binary_node(heap.root.right.left, 7, None, None, 11)) 
 
 
 

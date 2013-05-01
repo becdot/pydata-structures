@@ -452,8 +452,7 @@ class Heap(object):
 
     def __init__(self, root=None, array=None):
         if array:
-            self.build_from_array(array)
-
+            self.heapify(array)
         else:
             self.root = root
 
@@ -543,8 +542,11 @@ class Heap(object):
         while node.parent and node > node.parent:
             node = self.swap_parent(node)
 
-    # def build_from_array(self, arr):
-    #     pass
+    def heapify(self, arr):
+        self.root = HeapNode(arr[0])
+        for val in arr[1:]:
+            self.insert(val)
+
 
 
 
