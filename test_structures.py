@@ -510,7 +510,7 @@ class TestDataStructures(unittest.TestCase):
         self.assertEqual([int(str(n)) for n in heap], [17, 15, 10, 6, 10, 7])
         self.assertEqual(heap.flatten(), [17, 15, 10, 6, 10, 7])
 
-    def test_find_last_with_empty_aunt(self):
+    def test_find_open_with_empty_aunt(self):
         node17 = HeapNode(17)
         node15 = HeapNode(15)
         node11 = HeapNode(11)
@@ -522,10 +522,12 @@ class TestDataStructures(unittest.TestCase):
         node15.right = HeapNode(10)
 
         heap = Heap(node17)
-        self.assertEqual(heap.last.value, 10)
-        self.assertEqual(heap.find_last(), (node11, 'left'))
+        for node in heap:
+            pass
+        self.assertEqual(node.value, 10)
+        self.assertEqual(heap.find_open(), (node11, 'left'))
 
-    def test_find_last_with_single_child_aunt(self):
+    def test_find_open_with_single_child_aunt(self):
         node17 = HeapNode(17)
         node15 = HeapNode(15)
         node11 = HeapNode(11)
@@ -539,10 +541,12 @@ class TestDataStructures(unittest.TestCase):
         node11.left = node7
 
         heap = Heap(node17)
-        self.assertEqual(heap.last.value, 7)
-        self.assertEqual(heap.find_last(), (node11, 'right'))
+        for node in heap:
+            pass
+        self.assertEqual(node.value, 7)
+        self.assertEqual(heap.find_open(), (node11, 'right'))
 
-    def test_find_last_with_non_empty_aunt(self):
+    def test_find_open_with_non_empty_aunt(self):
         node17 = HeapNode(17)
         node15 = HeapNode(15)
         node11 = HeapNode(11)
@@ -558,8 +562,10 @@ class TestDataStructures(unittest.TestCase):
         node11.right = node5
         
         heap = Heap(node17)
-        self.assertEqual(heap.last.value, 5)
-        self.assertEqual(heap.find_last(), (node6, 'left'))
+        for node in heap:
+            pass
+        self.assertEqual(node.value, 5)
+        self.assertEqual(heap.find_open(), (node6, 'left'))
 
     def test_insert(self):
         node17 = HeapNode(17)

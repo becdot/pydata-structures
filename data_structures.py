@@ -456,7 +456,6 @@ class Heap(object):
 
         else:
             self.root = root
-            self.last = [n for n in self][-1]
 
     def __iter__(self):
         for node in self.breadth():
@@ -476,7 +475,7 @@ class Heap(object):
             for n in self.breadth(next):
                 yield n
 
-    def find_last(self):
+    def find_open(self):
         for node in self:
             if node.right:
                 continue
@@ -487,11 +486,10 @@ class Heap(object):
 
     def insert(self, value):
         node = HeapNode(value)
-        parent, place = self.find_last()
+        parent, place = self.find_open()
         node.parent = parent
         setattr(parent, place, node)
         self.percolate(node)
-        self.last = node
 
     def swap_parent(self, node):
         # make sure the node needs to be swapped
@@ -528,7 +526,6 @@ class Heap(object):
         if old_right:
             old_right.parent = old_parent
         # finally, if node has percolated to the top of the heap, update self.root
-        # (self.last will get updated in insert())
         if node.parent == None:
             self.root = node
         return node
